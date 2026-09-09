@@ -65,7 +65,7 @@ export default function Home() {
       {/* Header */}
       <header className="sticky top-0 z-40 border-b border-[var(--line)] bg-[rgba(245,244,238,.96)] backdrop-blur-xl w-full">
         <div className="mx-auto flex max-w-[1600px] items-center gap-2.5 px-3 py-2.5 sm:px-4 lg:px-6">
-          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[var(--brand)] font-black text-white text-xs sm:text-sm">
+          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-2xl bg-[var(--brand)] font-black text-white text-xs sm:text-sm shadow-md shadow-rose-500/30">
             MP
           </div>
           <div className="min-w-0 pr-1">
