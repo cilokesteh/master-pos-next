@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+:root {
+  --canvas: #f5f4ee;
+  --surface: #ffffff;
+  --surface-2: #ebe9e0;
+  --ink: #171b18;
+  --muted: #667068;
+  --line: #d8d9d1;
+  --brand: #1f6d46;
+  --brand-dark: #164f34;
+  --brand-soft: #def1e6;
+  --warning: #a95d12;
+  --danger: #ba3a3a;
+}
+
+* { box-sizing: border-box; }
+html, body { min-height: 100%; max-width: 100%; overflow-x: hidden; }
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; }
+
+.paper-grid {
+  background-image:
+    linear-gradient(rgba(31, 109, 70, .035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(31, 109, 70, .035) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+.tabular { font-variant-numeric: tabular-nums; }
+.safe-bottom { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
+
+@media (max-width: 767px) {
+  .mobile-cart-shadow { box-shadow: 0 -12px 40px rgba(23, 27, 24, .18); }
+}
+
+@media print {
+  body { background: white; }
+  .no-print { display: none !important; }
+}

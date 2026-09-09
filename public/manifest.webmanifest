@@ -1,0 +1,16 @@
+{
+  "name": "Master POS UMKM",
+  "short_name": "MasterPOS",
+  "description": "Kasir Warung & F&B Offline-first",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f4ee",
+  "theme_color": "#1f6d46",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
