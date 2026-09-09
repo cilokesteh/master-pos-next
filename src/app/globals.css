@@ -1,64 +1,94 @@
 @import "tailwindcss";
 
-:root {
-  /* Warm Culinary Palette (Vibrant, Fresh, High Energy F&B) */
-  --canvas: #fbf9f5;
-  --surface: #ffffff;
-  --surface-2: #f4efe6;
-  --surface-3: #eae2d5;
-  --ink: #1c1917;
-  --ink-soft: #44403c;
-  --muted: #78716c;
-  --line: #e7dfd5;
-  
-  /* Primary Food Red/Orange — Appetizing & Bold */
-  --brand: #e11d48;
-  --brand-dark: #be123c;
-  --brand-soft: #ffe4e6;
-  --brand-glow: rgba(225, 29, 72, 0.15);
+@custom-variant dark (&:where(.dark, .dark *));
 
-  /* Accents & Status */
-  --amber: #d97706;
-  --amber-soft: #fef3c7;
-  --emerald: #059669;
-  --emerald-soft: #d1fae5;
-  --blue: #2563eb;
-  --blue-soft: #dbeafe;
-  --danger: #dc2626;
+:root {
+  /* Apple Pure Light / Studio Slate */
+  --canvas: #f8fafc;
+  --surface: #ffffff;
+  --surface-2: #f1f5f9;
+  --surface-3: #e2e8f0;
+  --ink: #0f172a;
+  --ink-soft: #334155;
+  --muted: #64748b;
+  --line: #e2e8f0;
+  --line-soft: #f1f5f9;
+
+  /* Accent: High-precision Emerald & Rose FinTech */
+  --brand: #059669;
+  --brand-hover: #047857;
+  --brand-soft: #ecfdf5;
+  --brand-dark: #065f46;
+  --brand-border: #a7f3d0;
+  
+  --accent-cta: #e11d48;
+  --accent-soft: #ffe4e6;
+
+  --danger: #ef4444;
+  --danger-soft: #fee2e2;
+  --warning: #f59e0b;
+  --warning-soft: #fef3c7;
+  --card-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02);
+  --elevated-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+}
+
+.dark {
+  /* Zen Obsidian Luxe (FinTech Square/Toast Standard) */
+  --canvas: #090d16;
+  --surface: #0f172a;
+  --surface-2: #1e293b;
+  --surface-3: #334155;
+  --ink: #f8fafc;
+  --ink-soft: #cbd5e1;
+  --muted: #94a3b8;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-soft: rgba(255, 255, 255, 0.04);
+
+  --brand: #10b981;
+  --brand-hover: #059669;
+  --brand-soft: rgba(16, 185, 129, 0.12);
+  --brand-dark: #34d399;
+  --brand-border: rgba(16, 185, 129, 0.25);
+
+  --accent-cta: #f43f5e;
+  --accent-soft: rgba(244, 63, 94, 0.12);
+
+  --danger: #f87171;
+  --danger-soft: rgba(239, 68, 68, 0.15);
+  --warning: #fbbf24;
+  --warning-soft: rgba(245, 158, 11, 0.15);
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --elevated-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
 }
 
 * { box-sizing: border-box; }
 html, body { min-height: 100%; max-width: 100%; overflow-x: hidden; }
+
 body {
   margin: 0;
-  background: var(--canvas);
+  background-color: var(--canvas);
   color: var(--ink);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 button, input, select, textarea { font: inherit; }
 button { cursor: pointer; }
-
-/* Subtle warm dot pattern */
-.paper-grid {
-  background-image: radial-gradient(#e7dfd5 1.2px, transparent 1.2px);
-  background-size: 20px 20px;
-}
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { scrollbar-width: none; }
 .tabular { font-variant-numeric: tabular-nums; }
 .safe-bottom { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
 
-/* Glass blur panels */
-.glass-panel {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+/* Zen subtle background grid */
+.zen-grid {
+  background-image: linear-gradient(var(--line-soft) 1px, transparent 1px),
+                    linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
 
 @media print {
-  body { background: white; }
+  body { background: white !important; color: black !important; }
   .no-print { display: none !important; }
 }
