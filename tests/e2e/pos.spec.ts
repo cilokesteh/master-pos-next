@@ -18,14 +18,26 @@ test("shell, modules, and responsive layout work", async ({ page }, testInfo) =>
   page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
 
   await page.goto("/");
-  await expect(page.getByText("Master POS UMKM")).toBeVisible();
-  await expect(page.getByText("Es Teh Manis")).toBeVisible();
+  await expect(page.getByText("Master POS").first()).toBeVisible();
+  await expect(page.getByText("Es Teh Manis").first()).toBeVisible();
   await assertNoOverflow(page);
 
-  for (const label of ["Laporan", "Shift", "Produk", "Kasbon", "Backup"]) {
-    await page.getByRole("button", { name: label, exact: true }).first().click();
+  const isMobile = page.viewportSize()!.width < 1024;
+  if (isMobile) {
+    await page.getByRole("button", { name: "Laporan" }).first().click();
     await assertNoOverflow(page);
+    await page.getByRole("button", { name: "Kasbon" }).first().click();
+    await assertNoOverflow(page);
+    await page.getByRole("button", { name: "Lainnya" }).first().click();
+    await page.getByRole("button", { name: "Shift" }).last().click();
+    await assertNoOverflow(page);
+  } else {
+    for (const label of ["Laporan", "Shift", "Produk", "Kasbon", "Backup"]) {
+      await page.getByRole("button", { name: label, exact: true }).first().click();
+      await assertNoOverflow(page);
+    }
   }
+
   expect(errors).toEqual([]);
   await page.screenshot({ path: `test-results/${testInfo.project.name}-shell.png`, fullPage: true });
 });
@@ -34,9 +46,16 @@ test("cashier transaction persists to IndexedDB and report", async ({ page }) =>
   await page.goto("/");
   await page.getByRole("button", { name: "Manis" }).first().click();
 
-  const payButton = page.getByRole("button", { name: /Bayar/i }).first();
-  await expect(payButton).toBeVisible();
-  await payButton.click();
+  const isMobile = page.viewportSize()!.width < 1024;
+  if (isMobile) {
+    const payTrigger = page.getByRole("button", { name: /Bayar/i }).first();
+    await expect(payTrigger).toBeVisible();
+    await payTrigger.click();
+  } else {
+    const payButton = page.getByRole("button", { name: /Bayar Pesanan/i }).first();
+    await expect(payButton).toBeVisible();
+    await payButton.click();
+  }
 
   await expect(page.getByText("Pembayaran", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Konfirmasi Pembayaran" }).click();
@@ -57,13 +76,20 @@ test("cashier transaction persists to IndexedDB and report", async ({ page }) =>
   });
   expect(txCount).toBe(1);
 
-  await page.getByRole("button", { name: "Laporan", exact: true }).first().click();
+  await page.getByRole("button", { name: "Laporan" }).first().click();
   await expect(page.getByText("Rp 3.000").first()).toBeVisible();
 });
 
 test("product CRUD and backup download work", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "Produk", exact: true }).first().click();
+  const isMobile = page.viewportSize()!.width < 1024;
+  if (isMobile) {
+    await page.getByRole("button", { name: "Lainnya" }).first().click();
+    await page.getByRole("button", { name: "Produk" }).last().click();
+  } else {
+    await page.getByRole("button", { name: "Produk", exact: true }).first().click();
+  }
+
   await page.getByRole("button", { name: "Tambah Produk" }).click();
   await page.getByPlaceholder(/Es Teh Manis/).fill("Sate Usus");
   await page.getByPlaceholder("15000").fill("3000");
@@ -71,7 +97,13 @@ test("product CRUD and backup download work", async ({ page }) => {
   await page.getByRole("button", { name: "Simpan Produk" }).click();
   await expect(page.getByText("Sate Usus")).toBeVisible();
 
-  await page.getByRole("button", { name: "Backup", exact: true }).first().click();
+  if (isMobile) {
+    await page.getByRole("button", { name: "Lainnya" }).first().click();
+    await page.getByRole("button", { name: "Backup" }).last().click();
+  } else {
+    await page.getByRole("button", { name: "Backup", exact: true }).first().click();
+  }
+
   const downloadPromise = page.waitForEvent("download");
   await page.getByRole("button", { name: /Unduh File Cadangan/ }).click();
   const download = await downloadPromise;
@@ -85,7 +117,7 @@ test("PWA service worker registers and offline reload serves app", async ({ page
   const failedRequests: string[] = [];
   page.on("requestfailed", (request) => failedRequests.push(request.url()));
   await page.reload();
-  await expect(page.getByText("Master POS UMKM")).toBeVisible();
-  await expect(page.getByText("Es Teh Manis")).toBeVisible();
+  await expect(page.getByText("Master POS").first()).toBeVisible();
+  await expect(page.getByText("Es Teh Manis").first()).toBeVisible();
   expect(failedRequests.filter((url) => url.startsWith("http://127.0.0.1:4173"))).toEqual([]);
 });

@@ -1,6 +1,11 @@
 import { test, expect } from "@playwright/test";
 
 test("mobile user can view cart items in drawer, edit quantity, and proceed to checkout", async ({ page }) => {
+  // Only applies to mobile viewports where floating dock and drawer exist
+  if (page.viewportSize()!.width >= 1024) {
+    test.skip(true, "Mobile-specific drawer test");
+  }
+
   await page.goto("/");
   await page.getByRole("button", { name: "Kasir" }).first().click();
 
