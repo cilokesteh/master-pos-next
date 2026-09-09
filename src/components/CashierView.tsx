@@ -18,15 +18,57 @@ export default function CashierView({ products, query, setQuery }: { products: P
   const visible = useMemo(() => selectedCat === "Semua" ? products : products.filter((p) => p.category === selectedCat), [products, selectedCat]);
   const totals = useMemo(() => calculateCartTotals(items, discount), [items, discount]);
 
-  // Visual Category Meta
-  const getCatMeta = (cat: string) => {
+  // Visual Category Styling & Large Graphic Accents
+  const getCatStyle = (cat: string) => {
     switch (cat) {
-      case "Makanan": return { icon: Utensils, label: "Makanan", badge: "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20" };
-      case "Minuman": return { icon: Coffee, label: "Minuman", badge: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20" };
-      case "Snack": return { icon: Cookie, label: "Camilan", badge: "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20" };
-      case "Sembako": return { icon: ShoppingCart, label: "Sembako", badge: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20" };
-      case "Rokok": return { icon: Flame, label: "Rokok", badge: "bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20" };
-      default: return { icon: Sparkles, label: cat, badge: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20" };
+      case "Makanan":
+        return {
+          icon: Utensils,
+          badge: "bg-rose-500/10 text-rose-500 border-rose-500/20",
+          gradient: "from-rose-500/10 via-rose-500/5 to-transparent",
+          bgHover: "hover:border-rose-500/50",
+          color: "text-rose-500",
+        };
+      case "Minuman":
+        return {
+          icon: Coffee,
+          badge: "bg-amber-500/10 text-amber-500 border-amber-500/20",
+          gradient: "from-amber-500/10 via-amber-500/5 to-transparent",
+          bgHover: "hover:border-amber-500/50",
+          color: "text-amber-500",
+        };
+      case "Snack":
+        return {
+          icon: Cookie,
+          badge: "bg-orange-500/10 text-orange-500 border-orange-500/20",
+          gradient: "from-orange-500/10 via-orange-500/5 to-transparent",
+          bgHover: "hover:border-orange-500/50",
+          color: "text-orange-500",
+        };
+      case "Sembako":
+        return {
+          icon: ShoppingCart,
+          badge: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
+          gradient: "from-emerald-500/10 via-emerald-500/5 to-transparent",
+          bgHover: "hover:border-emerald-500/50",
+          color: "text-emerald-500",
+        };
+      case "Rokok":
+        return {
+          icon: Flame,
+          badge: "bg-slate-500/10 text-slate-400 border-slate-500/20",
+          gradient: "from-slate-500/10 via-slate-500/5 to-transparent",
+          bgHover: "hover:border-slate-400/50",
+          color: "text-slate-400",
+        };
+      default:
+        return {
+          icon: Sparkles,
+          badge: "bg-blue-500/10 text-blue-500 border-blue-500/20",
+          gradient: "from-blue-500/10 via-blue-500/5 to-transparent",
+          bgHover: "hover:border-blue-500/50",
+          color: "text-blue-500",
+        };
     }
   };
 
@@ -46,76 +88,88 @@ export default function CashierView({ products, query, setQuery }: { products: P
         {/* Left Column: Menu Catalog Cockpit */}
         <div className="space-y-4 w-full min-w-0 pb-28 lg:pb-6">
           
-          {/* Category Chips Carousel */}
-          <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar w-full min-w-0">
+          {/* Segmented Category Filter Bar */}
+          <div className="flex gap-2 overflow-x-auto p-1.5 rounded-2xl bg-[var(--surface-2)]/60 border border-[var(--line)] no-scrollbar w-full min-w-0">
             {categories.map((cat) => {
               const active = selectedCat === cat;
-              const { icon: CatIcon } = getCatMeta(cat);
+              const { icon: CatIcon } = getCatStyle(cat);
               return (
                 <button
                   key={cat}
                   onClick={() => setSelectedCat(cat)}
-                  className={`flex items-center gap-1.5 whitespace-nowrap shrink-0 rounded-2xl px-3.5 py-2 text-xs font-bold transition-all ${
+                  className={`flex items-center gap-1.5 whitespace-nowrap shrink-0 rounded-xl px-3.5 py-2 text-xs font-bold transition-all duration-200 ${
                     active
-                      ? "bg-[var(--brand)] text-white shadow-md shadow-emerald-500/20 scale-[1.02]"
-                      : "border border-[var(--line)] bg-[var(--surface)] text-[var(--muted)] hover:text-[var(--ink)] hover:border-slate-400/30"
+                      ? "bg-[var(--surface)] text-[var(--ink)] shadow-sm font-black scale-[1.02] border border-[var(--line)]"
+                      : "text-[var(--muted)] hover:text-[var(--ink)]"
                   }`}
                 >
-                  <CatIcon size={13} className={active ? "text-white" : "text-[var(--muted)]"} />
+                  <CatIcon size={14} className={active ? "text-[var(--brand)]" : "text-[var(--muted)]"} />
                   <span>{cat}</span>
                 </button>
               );
             })}
           </div>
 
-          {/* SQUARE GRID KATALOG KOTAK-KOTAK (2-col di HP, 3-col di tablet, 4-col di desktop) */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3.5 w-full min-w-0">
+          {/* HIGH-PRECISION SQUARE TILE GRID */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 xl:grid-cols-4 gap-3 w-full min-w-0">
             {visible.map((product) => {
               const outOfStock = product.trackStock && product.stock <= 0;
               const inCartCount = items.filter((i) => i.productId === product.id).reduce((sum, i) => sum + i.qty, 0);
-              const { icon: CatIcon, badge } = getCatMeta(product.category);
+              const { icon: CatIcon, badge, gradient, color } = getCatStyle(product.category);
 
               return (
                 <button
                   key={product.id}
                   disabled={outOfStock}
                   onClick={() => handleCardClick(product)}
-                  className={`group relative flex flex-col justify-between aspect-square rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-3 text-left transition-all duration-150 hover:border-[var(--brand)] hover:shadow-lg active:scale-95 select-none ${
-                    outOfStock ? "opacity-35 grayscale cursor-not-allowed" : "cursor-pointer"
-                  } ${inCartCount > 0 ? "border-[var(--brand)] ring-2 ring-[var(--brand-border)] bg-[var(--brand-soft)]/25" : ""}`}
+                  className={`group relative flex flex-col justify-between aspect-square rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-3.5 text-left transition-all duration-150 active:scale-[0.96] overflow-hidden select-none shadow-xs ${
+                    outOfStock ? "opacity-30 grayscale cursor-not-allowed" : "hover:border-[var(--brand)] hover:shadow-md cursor-pointer"
+                  } ${inCartCount > 0 ? "border-[var(--brand)] ring-2 ring-[var(--brand-border)] bg-[var(--brand-soft)]/20" : ""}`}
                 >
-                  {/* Top Row: Icon + In-Cart Badge / Stock */}
-                  <div className="flex items-start justify-between w-full gap-1">
-                    <div className={`grid h-7 w-7 place-items-center rounded-xl border ${badge}`}>
-                      <CatIcon size={14} />
+                  {/* Atmospheric Category Gradient Backdrop */}
+                  <div className={`absolute top-0 right-0 left-0 h-16 bg-gradient-to-b ${gradient} opacity-80 pointer-events-none`} />
+
+                  {/* Watermark Big Background Category Icon */}
+                  <div className="absolute top-2 right-2 opacity-[0.06] dark:opacity-[0.08] pointer-events-none">
+                    <CatIcon size={64} className={color} />
+                  </div>
+
+                  {/* Top Row: Mini Category Badge + Stock / Cart Counter */}
+                  <div className="relative z-10 flex items-start justify-between w-full gap-1">
+                    <div className="flex items-center gap-1">
+                      <span className={`inline-flex items-center rounded-lg border px-2 py-0.5 text-[9px] font-black tracking-wider uppercase ${badge}`}>
+                        {product.category}
+                      </span>
                     </div>
+
                     {inCartCount > 0 ? (
-                      <span className="flex items-center gap-0.5 rounded-full bg-[var(--brand)] px-2 py-0.5 text-[10px] font-black text-white shadow-xs">
+                      <span className="flex items-center gap-1 rounded-full bg-[var(--brand)] px-2 py-0.5 text-[10px] font-black text-white shadow-xs animate-in zoom-in-50 duration-150">
                         {inCartCount}
                       </span>
                     ) : product.trackStock ? (
-                      <span className={`text-[9px] font-bold tabular ${product.stock <= 5 ? "text-amber-500" : "text-[var(--muted)]"}`}>
-                        {product.stock}
+                      <span className={`text-[9px] font-bold tabular px-1.5 py-0.5 rounded-md ${product.stock <= 5 ? "bg-amber-500/10 text-amber-500" : "bg-[var(--surface-2)] text-[var(--muted)]"}`}>
+                        Stok {product.stock}
                       </span>
                     ) : null}
                   </div>
 
-                  {/* Middle: Title (Truncated 2-lines) */}
-                  <div className="w-full my-auto py-1">
+                  {/* Center: Title & Variant Info */}
+                  <div className="relative z-10 my-auto py-1 w-full">
                     <h3 className="text-xs sm:text-sm font-bold text-[var(--ink)] line-clamp-2 leading-snug group-hover:text-[var(--brand-dark)] transition-colors">
                       {product.name}
                     </h3>
                     {product.variants?.length ? (
-                      <span className="inline-block text-[9px] text-[var(--muted)] font-medium mt-0.5">
-                        {product.variants.length} varian
+                      <span className="inline-block text-[10px] text-[var(--brand-dark)] font-semibold mt-1 bg-[var(--brand-soft)]/40 px-1.5 py-0.5 rounded-md">
+                        {product.variants.length} Varian Rasa
                       </span>
                     ) : null}
                   </div>
 
-                  {/* Bottom: Price Tag */}
-                  <div className="w-full pt-1 border-t border-[var(--line)]/60 flex items-baseline justify-between">
-                    <span className="text-[10px] text-[var(--muted)] font-semibold">Rp</span>
-                    <span className="text-xs sm:text-sm font-black text-[var(--brand-dark)] tabular">
+                  {/* Bottom: Price Tag Bar */}
+                  <div className="relative z-10 w-full pt-2 border-t border-[var(--line)] flex items-center justify-between">
+                    <span className="text-[10px] font-semibold text-[var(--muted)]">Harga</span>
+                    <span className="text-xs sm:text-sm font-black text-[var(--ink)] tabular tracking-tight">
+                      <span className="text-[10px] text-[var(--muted)] font-normal mr-0.5">Rp</span>
                       {product.price.toLocaleString("id-ID")}
                     </span>
                   </div>
@@ -212,7 +266,7 @@ export default function CashierView({ products, query, setQuery }: { products: P
 
         {/* Mobile Floating Cart Dock */}
         {items.length > 0 && (
-          <div className="fixed inset-x-3 bottom-20 z-40 flex items-center justify-between rounded-3xl bg-[var(--surface)] border border-[var(--line)] p-3 text-[var(--ink)] shadow-2xl lg:hidden">
+          <div className="fixed inset-x-3 bottom-20 z-40 flex items-center justify-between rounded-3xl bg-[var(--surface)]/95 border border-[var(--line)] p-3 text-[var(--ink)] shadow-2xl backdrop-blur-md lg:hidden">
             <button
               onClick={() => setCartDrawerOpen(true)}
               className="flex items-center gap-2.5 text-left min-w-0 pr-2 flex-1"
@@ -329,14 +383,14 @@ export default function CashierView({ products, query, setQuery }: { products: P
           </div>
         )}
 
-        {/* Modal Pilihan Varian Rasa/Suhu (Saat Kartu Kotak Ditekan) */}
+        {/* Modal Pilihan Varian Rasa/Suhu (Clean Apple Glass Pop-up) */}
         {variantModalProduct && (
           <div
             className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 backdrop-blur-xs"
             onClick={() => setVariantModalProduct(null)}
           >
             <div
-              className="w-full max-w-sm rounded-3xl bg-[var(--surface)] border border-[var(--line)] p-5 shadow-2xl"
+              className="w-full max-w-sm rounded-3xl bg-[var(--surface)] border border-[var(--line)] p-5 shadow-2xl animate-in zoom-in-95 duration-150"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-start justify-between pb-3 border-b border-[var(--line)]">
@@ -346,13 +400,13 @@ export default function CashierView({ products, query, setQuery }: { products: P
                     Rp {variantModalProduct.price.toLocaleString("id-ID")}
                   </p>
                 </div>
-                <button onClick={() => setVariantModalProduct(null)} className="p-1 rounded-full text-[var(--muted)] hover:bg-[var(--surface-2)]">
+                <button onClick={() => setVariantModalProduct(null)} className="p-1.5 rounded-full text-[var(--muted)] hover:bg-[var(--surface-2)]">
                   <X size={18} />
                 </button>
               </div>
 
               <div className="py-4">
-                <p className="text-xs font-bold text-[var(--muted)] mb-3">PILIH VARIAN RASA / SUHU:</p>
+                <p className="text-xs font-bold text-[var(--muted)] mb-3 uppercase tracking-wider">PILIH VARIAN MENU:</p>
                 <div className="grid grid-cols-2 gap-2">
                   {variantModalProduct.variants?.map((v) => (
                     <button
