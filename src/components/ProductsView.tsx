@@ -106,7 +106,7 @@ export default function ProductsView() {
         </div>
         <button
           onClick={() => openForm()}
-          className="flex items-center gap-1.5 rounded-xl bg-[var(--brand)] px-3.5 py-2 text-xs font-bold text-white shadow-sm hover:bg-[var(--brand-dark)]"
+          className="flex items-center gap-1.5 rounded-xl bg-[var(--brand)] px-3.5 py-2 text-xs font-bold text-white hover:bg-[var(--brand-dark)]"
         >
           <PackagePlus size={14} /> Tambah Produk
         </button>
@@ -135,7 +135,7 @@ export default function ProductsView() {
         </div>
       </div>
 
-      <div className="rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-4 shadow-sm">
+      <div className="rounded-xl border border-[var(--line)] bg-[var(--surface)] p-4">
         <div className="divide-y divide-[var(--line)]">
           {filtered.length === 0 ? (
             <p className="py-8 text-center text-xs text-[var(--muted)]">Tidak ada produk ditemukan.</p>
@@ -201,7 +201,7 @@ export default function ProductsView() {
 
       {modalOpen && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-4">
-          <div className="w-full max-w-md rounded-3xl bg-[var(--surface)] p-5">
+          <div className="w-full max-w-md rounded-xl bg-[var(--surface)] p-5">
             <h3 className="text-base font-bold">{editing ? "Edit Produk" : "Tambah Produk Baru"}</h3>
             <div className="mt-3 space-y-2.5 max-h-[75vh] overflow-y-auto pr-1 text-xs">
               <div>

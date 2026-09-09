@@ -113,7 +113,7 @@ export default function PaymentModal({ totals, items, onClose }: { totals: any; 
   if (completedTx) {
     return (
       <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/60 p-4">
-        <div className="w-full max-w-sm rounded-3xl bg-[var(--surface)] p-6 text-center">
+        <div className="w-full max-w-sm rounded-xl bg-[var(--surface)] p-6 text-center">
           <CheckCircle2 className="mx-auto h-12 w-12 text-[var(--brand)]" />
           <h3 className="mt-2 text-xl font-bold">Transaksi Sukses!</h3>
           <p className="text-sm text-[var(--muted)]">No. Struk: {completedTx.receiptNumber}</p>
@@ -134,7 +134,7 @@ export default function PaymentModal({ totals, items, onClose }: { totals: any; 
 
   return (
     <div className="fixed inset-0 z-[70] flex items-end justify-center bg-black/60 p-0 sm:items-center sm:p-4">
-      <div className="w-full max-w-lg rounded-t-3xl bg-[var(--surface)] p-5 sm:rounded-3xl">
+      <div className="w-full max-w-lg rounded-t-3xl bg-[var(--surface)] p-5 sm:rounded-xl">
         <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
           <div><h3 className="font-bold">Pembayaran</h3><p className="text-xs text-[var(--muted)]">Total Tagihan: Rp {totals.total.toLocaleString("id-ID")}</p></div>
           <button onClick={onClose} className="rounded-full p-1 hover:bg-[var(--surface-2)]"><X size={18}/></button>
@@ -150,7 +150,7 @@ export default function PaymentModal({ totals, items, onClose }: { totals: any; 
 
         {method === "cash" && (
           <div className="mt-4 space-y-3">
-            <input type="number" value={cashInput} onChange={(e) => setCashInput(e.target.value)} className="w-full rounded-2xl border border-[var(--line)] bg-[var(--surface-2)] py-3 text-center text-2xl font-bold tabular outline-none focus:border-[var(--brand)]" />
+            <input type="number" value={cashInput} onChange={(e) => setCashInput(e.target.value)} className="w-full rounded-lg border border-[var(--line)] bg-[var(--surface-2)] py-3 text-center text-2xl font-bold tabular outline-none focus:border-[var(--brand)]" />
             <div className="flex flex-wrap gap-1.5">
               {quickCashPresets.map((p) => (
                 <button key={p} onClick={() => setCashInput(String(p))} className="rounded-lg border border-[var(--line)] bg-[var(--surface)] px-2.5 py-1.5 text-xs font-semibold tabular hover:border-[var(--brand)]">
@@ -171,7 +171,7 @@ export default function PaymentModal({ totals, items, onClose }: { totals: any; 
           </div>
         )}
 
-        <button disabled={method === "cash" && cashTendered < totals.total || (method === "kasbon" && !customerName.trim())} onClick={handleCheckout} className="mt-5 w-full rounded-2xl bg-[var(--brand)] py-3.5 font-bold text-white shadow-md disabled:opacity-40">
+        <button disabled={method === "cash" && cashTendered < totals.total || (method === "kasbon" && !customerName.trim())} onClick={handleCheckout} className="mt-5 w-full rounded-lg bg-[var(--brand)] py-3.5 font-bold text-white disabled:opacity-40">
           Konfirmasi Pembayaran
         </button>
       </div>

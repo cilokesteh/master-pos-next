@@ -89,7 +89,7 @@ export default function CashierView({ products, query, setQuery }: { products: P
         <div className="space-y-4 w-full min-w-0 pb-28 lg:pb-6">
           
           {/* Segmented Category Filter Bar */}
-          <div className="flex gap-2 overflow-x-auto p-1.5 rounded-2xl bg-[var(--surface-2)]/60 border border-[var(--line)] no-scrollbar w-full min-w-0">
+          <div className="flex gap-2 overflow-x-auto p-1.5 rounded-lg bg-[var(--surface-2)]/60 border border-[var(--line)] no-scrollbar w-full min-w-0">
             {categories.map((cat) => {
               const active = selectedCat === cat;
               const { icon: CatIcon } = getCatStyle(cat);
@@ -99,7 +99,7 @@ export default function CashierView({ products, query, setQuery }: { products: P
                   onClick={() => setSelectedCat(cat)}
                   className={`flex items-center gap-1.5 whitespace-nowrap shrink-0 rounded-xl px-3.5 py-2 text-xs font-bold transition-all duration-200 ${
                     active
-                      ? "bg-[var(--surface)] text-[var(--ink)] shadow-sm font-black scale-[1.02] border border-[var(--line)]"
+                      ? "bg-[var(--surface)] text-[var(--ink)] font-black scale-[1.02] border border-[var(--line)]"
                       : "text-[var(--muted)] hover:text-[var(--ink)]"
                   }`}
                 >
@@ -115,35 +115,23 @@ export default function CashierView({ products, query, setQuery }: { products: P
             {visible.map((product) => {
               const outOfStock = product.trackStock && product.stock <= 0;
               const inCartCount = items.filter((i) => i.productId === product.id).reduce((sum, i) => sum + i.qty, 0);
-              const { icon: CatIcon, badge, gradient, color } = getCatStyle(product.category);
+              const { badge } = getCatStyle(product.category);
 
               return (
                 <button
                   key={product.id}
                   disabled={outOfStock}
                   onClick={() => handleCardClick(product)}
-                  className={`group relative flex flex-col justify-between aspect-square rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-3.5 text-left transition-all duration-150 active:scale-[0.96] overflow-hidden select-none shadow-xs ${
+                  className={`group relative flex flex-col justify-between aspect-square rounded-[10px] border border-[var(--line)] bg-[var(--surface)] p-3 text-left transition-all duration-150 active:scale-[0.96] overflow-hidden select-none ${
                     outOfStock ? "opacity-30 grayscale cursor-not-allowed" : "hover:border-[var(--brand)] hover:shadow-md cursor-pointer"
-                  } ${inCartCount > 0 ? "border-[var(--brand)] ring-2 ring-[var(--brand-border)] bg-[var(--brand-soft)]/20" : ""}`}
+                  } ${inCartCount > 0 ? "border-[var(--brand)] bg-[var(--brand-soft)]/20" : ""}`}
                 >
-                  {/* Atmospheric Category Gradient Backdrop */}
-                  <div className={`absolute top-0 right-0 left-0 h-16 bg-gradient-to-b ${gradient} opacity-80 pointer-events-none`} />
-
-                  {/* Watermark Big Background Category Icon */}
-                  <div className="absolute top-2 right-2 opacity-[0.06] dark:opacity-[0.08] pointer-events-none">
-                    <CatIcon size={64} className={color} />
-                  </div>
 
                   {/* Top Row: Mini Category Badge + Stock / Cart Counter */}
                   <div className="relative z-10 flex items-start justify-between w-full gap-1">
-                    <div className="flex items-center gap-1">
-                      <span className={`inline-flex items-center rounded-lg border px-2 py-0.5 text-[9px] font-black tracking-wider uppercase ${badge}`}>
-                        {product.category}
-                      </span>
-                    </div>
 
                     {inCartCount > 0 ? (
-                      <span className="flex items-center gap-1 rounded-full bg-[var(--brand)] px-2 py-0.5 text-[10px] font-black text-white shadow-xs animate-in zoom-in-50 duration-150">
+                      <span className="flex items-center gap-1 rounded-full bg-[var(--brand)] px-2 py-0.5 text-[10px] font-black text-white animate-in zoom-in-50 duration-150">
                         {inCartCount}
                       </span>
                     ) : product.trackStock ? (
@@ -159,18 +147,16 @@ export default function CashierView({ products, query, setQuery }: { products: P
                       {product.name}
                     </h3>
                     {product.variants?.length ? (
-                      <span className="inline-block text-[10px] text-[var(--brand-dark)] font-semibold mt-1 bg-[var(--brand-soft)]/40 px-1.5 py-0.5 rounded-md">
+                      <span className="inline-block text-[10px] text-[var(--muted)] font-medium mt-1">
                         {product.variants.length} Varian Rasa
                       </span>
                     ) : null}
                   </div>
 
                   {/* Bottom: Price Tag Bar */}
-                  <div className="relative z-10 w-full pt-2 border-t border-[var(--line)] flex items-center justify-between">
-                    <span className="text-[10px] font-semibold text-[var(--muted)]">Harga</span>
-                    <span className="text-xs sm:text-sm font-black text-[var(--ink)] tabular tracking-tight">
-                      <span className="text-[10px] text-[var(--muted)] font-normal mr-0.5">Rp</span>
-                      {product.price.toLocaleString("id-ID")}
+                  <div className="relative z-10 w-full pt-2 border-t border-[var(--line)]">
+                    <span className="text-sm sm:text-base font-black text-[var(--ink)] tabular tracking-tight">
+                      <span className="text-[10px] text-[var(--muted)] font-semibold mr-1">Rp</span>{product.price.toLocaleString("id-ID")}
                     </span>
                   </div>
                 </button>
@@ -180,10 +166,10 @@ export default function CashierView({ products, query, setQuery }: { products: P
         </div>
 
         {/* Desktop Sticky Order Pane (Square / Toast Inspired) */}
-        <div className="hidden rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-5 lg:flex lg:flex-col h-[calc(100vh-95px)] sticky top-20 shadow-sm">
+        <div className="hidden rounded-xl border border-[var(--line)] bg-[var(--surface)] p-5 lg:flex lg:flex-col h-[calc(100vh-95px)] sticky top-20">
           <div className="flex items-center justify-between border-b border-[var(--line)] pb-3.5">
             <div className="flex items-center gap-2.5">
-              <div className="grid h-9 w-9 place-items-center rounded-2xl bg-[var(--brand-soft)] text-[var(--brand)]">
+              <div className="grid h-9 w-9 place-items-center rounded-lg bg-[var(--brand-soft)] text-[var(--brand)]">
                 <ShoppingBag size={18} />
               </div>
               <div>
@@ -211,7 +197,7 @@ export default function CashierView({ products, query, setQuery }: { products: P
               items.map((item) => {
                 const product = products.find((p) => p.id === item.productId);
                 return (
-                  <div key={item.id} className="rounded-2xl border border-[var(--line)] bg-[var(--surface-2)]/60 p-3">
+                  <div key={item.id} className="rounded-lg border border-[var(--line)] bg-[var(--surface-2)]/60 p-3">
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0 flex-1">
                         <h4 className="text-xs font-bold truncate text-[var(--ink)]">{item.name}</h4>
@@ -226,7 +212,7 @@ export default function CashierView({ products, query, setQuery }: { products: P
                       </button>
                     </div>
                     <div className="mt-2.5 flex items-center justify-between">
-                      <div className="flex items-center gap-2 rounded-xl border border-[var(--line)] bg-[var(--surface)] px-2 py-1 shadow-2xs">
+                      <div className="flex items-center gap-2 rounded-xl border border-[var(--line)] bg-[var(--surface)] px-2 py-1">
                         <button onClick={() => changeQty(item.id, item.qty - 1, product?.stock || 0)} className="text-[var(--ink)] active:scale-90"><Minus size={11} /></button>
                         <span className="w-5 text-center text-xs font-bold tabular">{item.qty}</span>
                         <button onClick={() => changeQty(item.id, item.qty + 1, product?.stock || 0)} className="text-[var(--ink)] active:scale-90"><Plus size={11} /></button>
@@ -257,7 +243,7 @@ export default function CashierView({ products, query, setQuery }: { products: P
             <button
               disabled={items.length === 0}
               onClick={() => setPayOpen(true)}
-              className="mt-2 flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--brand)] py-3.5 font-bold text-white shadow-lg shadow-emerald-600/20 hover:bg-[var(--brand-hover)] active:scale-98 transition-all disabled:opacity-40"
+              className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--brand)] py-3.5 font-bold text-white hover:bg-[var(--brand-hover)] active:scale-98 transition-all disabled:opacity-40"
             >
               Bayar Pesanan <ArrowRight size={16} />
             </button>
@@ -266,12 +252,12 @@ export default function CashierView({ products, query, setQuery }: { products: P
 
         {/* Mobile Floating Cart Dock */}
         {items.length > 0 && (
-          <div className="fixed inset-x-3 bottom-20 z-40 flex items-center justify-between rounded-3xl bg-[var(--surface)]/95 border border-[var(--line)] p-3 text-[var(--ink)] shadow-2xl backdrop-blur-md lg:hidden">
+          <div className="fixed inset-x-3 bottom-20 z-40 flex items-center justify-between rounded-xl bg-[var(--surface)]/95 border border-[var(--line)] p-3 text-[var(--ink)] backdrop-blur-md lg:hidden">
             <button
               onClick={() => setCartDrawerOpen(true)}
               className="flex items-center gap-2.5 text-left min-w-0 pr-2 flex-1"
             >
-              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-[var(--brand-soft)] text-[var(--brand)]">
+              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[var(--brand-soft)] text-[var(--brand)]">
                 <ShoppingBag size={18} />
               </div>
               <div className="min-w-0 flex-1">
@@ -286,7 +272,7 @@ export default function CashierView({ products, query, setQuery }: { products: P
             </button>
             <button
               onClick={() => setPayOpen(true)}
-              className="flex items-center gap-1.5 rounded-2xl bg-[var(--brand)] px-4 py-2.5 text-xs font-bold text-white shadow-sm shrink-0 active:scale-95"
+              className="flex items-center gap-1.5 rounded-lg bg-[var(--brand)] px-4 py-2.5 text-xs font-bold text-white shrink-0 active:scale-95"
             >
               Bayar <ArrowRight size={14} />
             </button>
@@ -296,11 +282,11 @@ export default function CashierView({ products, query, setQuery }: { products: P
         {/* Mobile Full Cart Drawer / Bottom Sheet */}
         {cartDrawerOpen && (
           <div
-            className="fixed inset-0 z-50 bg-black/60 lg:hidden flex flex-col justify-end backdrop-blur-xs"
+            className="fixed inset-0 z-50 bg-black/60 lg:hidden flex flex-col justify-end"
             onClick={() => setCartDrawerOpen(false)}
           >
             <div
-              className="w-full bg-[var(--surface)] rounded-t-3xl max-h-[82vh] flex flex-col p-5 shadow-2xl animate-in slide-in-from-bottom duration-200 border-t border-[var(--line)]"
+              className="w-full bg-[var(--surface)] rounded-t-3xl max-h-[82vh] flex flex-col p-5 animate-in slide-in-from-bottom duration-200 border-t border-[var(--line)]"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
@@ -329,7 +315,7 @@ export default function CashierView({ products, query, setQuery }: { products: P
                 {items.map((item) => {
                   const product = products.find((p) => p.id === item.productId);
                   return (
-                    <div key={item.id} className="rounded-2xl border border-[var(--line)] bg-[var(--surface-2)]/60 p-3">
+                    <div key={item.id} className="rounded-lg border border-[var(--line)] bg-[var(--surface-2)]/60 p-3">
                       <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0 flex-1">
                           <h4 className="text-sm font-bold text-[var(--ink)] break-words">{item.name}</h4>
@@ -345,7 +331,7 @@ export default function CashierView({ products, query, setQuery }: { products: P
                       </div>
 
                       <div className="mt-3 flex items-center justify-between">
-                        <div className="flex items-center gap-3 rounded-xl border border-[var(--line)] bg-[var(--surface)] px-3 py-1.5 shadow-2xs">
+                        <div className="flex items-center gap-3 rounded-xl border border-[var(--line)] bg-[var(--surface)] px-3 py-1.5">
                           <button onClick={() => changeQty(item.id, item.qty - 1, product?.stock || 0)} className="text-[var(--ink)] active:scale-90"><Minus size={13} /></button>
                           <span className="w-7 text-center text-sm font-bold tabular">{item.qty}</span>
                           <button onClick={() => changeQty(item.id, item.qty + 1, product?.stock || 0)} className="text-[var(--ink)] active:scale-90"><Plus size={13} /></button>
@@ -374,7 +360,7 @@ export default function CashierView({ products, query, setQuery }: { products: P
                     setCartDrawerOpen(false);
                     setPayOpen(true);
                   }}
-                  className="w-full flex items-center justify-center gap-2 rounded-2xl bg-[var(--brand)] py-3.5 font-bold text-white shadow-lg shadow-emerald-600/20 active:scale-98 disabled:opacity-40"
+                  className="w-full flex items-center justify-center gap-2 rounded-lg bg-[var(--brand)] py-3.5 font-bold text-white active:scale-98 disabled:opacity-40"
                 >
                   Lanjut Pembayaran <ArrowRight size={16} />
                 </button>
@@ -386,11 +372,11 @@ export default function CashierView({ products, query, setQuery }: { products: P
         {/* Modal Pilihan Varian Rasa/Suhu (Clean Apple Glass Pop-up) */}
         {variantModalProduct && (
           <div
-            className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 backdrop-blur-xs"
+            className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4"
             onClick={() => setVariantModalProduct(null)}
           >
             <div
-              className="w-full max-w-sm rounded-3xl bg-[var(--surface)] border border-[var(--line)] p-5 shadow-2xl animate-in zoom-in-95 duration-150"
+              className="w-full max-w-sm rounded-[14px] bg-[var(--surface)] border border-[var(--line)] p-5 animate-in zoom-in-95 duration-150"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-start justify-between pb-3 border-b border-[var(--line)]">
@@ -407,7 +393,7 @@ export default function CashierView({ products, query, setQuery }: { products: P
 
               <div className="py-4">
                 <p className="text-xs font-bold text-[var(--muted)] mb-3 uppercase tracking-wider">PILIH VARIAN MENU:</p>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {variantModalProduct.variants?.map((v) => (
                     <button
                       key={v}
@@ -415,7 +401,7 @@ export default function CashierView({ products, query, setQuery }: { products: P
                         add(variantModalProduct, v);
                         setVariantModalProduct(null);
                       }}
-                      className="rounded-2xl border border-[var(--line)] bg-[var(--surface-2)] p-3 text-xs font-bold text-[var(--ink)] hover:border-[var(--brand)] hover:bg-[var(--brand-soft)] hover:text-[var(--brand-dark)] active:scale-95 transition-all text-center"
+                      className="rounded-lg border border-[var(--line)] bg-[var(--surface-2)] p-3 text-xs font-bold text-[var(--ink)] hover:border-[var(--brand)] hover:bg-[var(--brand-soft)] hover:text-[var(--brand-dark)] active:scale-95 transition-all text-center"
                     >
                       {v}
                     </button>

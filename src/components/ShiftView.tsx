@@ -141,7 +141,7 @@ export default function ShiftView() {
       </div>
 
       {!currentShift ? (
-        <div className="rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-6">
+        <div className="rounded-xl border border-[var(--line)] bg-[var(--surface)] p-6">
           <h3 className="text-lg font-bold">Buka Shift Kasir Baru</h3>
           <p className="text-xs text-[var(--muted)]">Masukkan uang modal awal di laci kasir pagi ini.</p>
           <div className="mt-4 flex max-w-md gap-2">
@@ -160,7 +160,7 @@ export default function ShiftView() {
       ) : (
         <div className="grid gap-6 lg:grid-cols-[1fr_400px]">
           <div className="space-y-6">
-            <div className="rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-5">
+            <div className="rounded-xl border border-[var(--line)] bg-[var(--surface)] p-5">
               <h3 className="font-bold">Catat Pengeluaran Operasional (Petty Cash)</h3>
               <p className="text-xs text-[var(--muted)]">Beli es batu, galon, bumbu dapur, plastik, dll.</p>
               <div className="mt-3 grid gap-2 sm:grid-cols-3">
@@ -210,7 +210,7 @@ export default function ShiftView() {
             </div>
           </div>
 
-          <div className="rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-5 shadow-sm">
+          <div className="rounded-xl border border-[var(--line)] bg-[var(--surface)] p-5">
             <h3 className="font-bold">Rekap Laci Kasir (Z-Report)</h3>
             <p className="text-xs text-[var(--muted)]">Shift ID: {currentShift.id}</p>
 

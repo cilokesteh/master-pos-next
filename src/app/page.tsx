@@ -91,7 +91,7 @@ export default function Home() {
       {/* Top Header Bar */}
       <header className="sticky top-0 z-40 border-b border-[var(--line)] bg-[var(--surface)]/90 backdrop-blur-xl w-full">
         <div className="mx-auto flex max-w-[1600px] items-center gap-3 px-3 py-2.5 sm:px-4 lg:px-6">
-          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-2xl bg-[var(--brand)] font-black text-white text-xs sm:text-sm shadow-md shadow-emerald-600/20">
+          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[var(--brand)] font-black text-white text-xs sm:text-sm">
             MP
           </div>
           <div className="min-w-0 pr-1 hidden sm:block">
@@ -106,7 +106,7 @@ export default function Home() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Cari menu, sembako, atau barcode..."
-                className="w-full rounded-2xl border border-[var(--line)] bg-[var(--surface-2)] py-2 pl-8.5 pr-3 text-xs text-[var(--ink)] outline-none focus:border-[var(--brand)] focus:bg-[var(--surface)] transition-all"
+                className="w-full rounded-lg border border-[var(--line)] bg-[var(--surface-2)] py-2 pl-8.5 pr-3 text-xs text-[var(--ink)] outline-none focus:border-[var(--brand)] focus:bg-[var(--surface)] transition-all"
               />
             </label>
           )}
@@ -120,7 +120,7 @@ export default function Home() {
           {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
-            className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-2 text-[var(--muted)] hover:text-[var(--ink)] hover:border-slate-400/30 transition-all shrink-0"
+            className="rounded-lg border border-[var(--line)] bg-[var(--surface)] p-2 text-[var(--muted)] hover:text-[var(--ink)] hover:border-slate-400/30 transition-all shrink-0"
             title={darkMode ? "Ganti ke Mode Terang" : "Ganti ke Mode Gelap"}
             aria-label="Toggle Theme"
           >
@@ -130,7 +130,7 @@ export default function Home() {
           {/* Mobile Drawer Trigger */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="lg:hidden shrink-0 rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-2 text-[var(--ink)]"
+            className="lg:hidden shrink-0 rounded-lg border border-[var(--line)] bg-[var(--surface)] p-2 text-[var(--ink)]"
             aria-label="Menu navigasi"
           >
             {menuOpen ? <X size={17} /> : <Menu size={17} />}
@@ -140,8 +140,8 @@ export default function Home() {
 
       {/* Mobile Drawer Menu */}
       {menuOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 lg:hidden flex justify-end backdrop-blur-xs" onClick={() => setMenuOpen(false)}>
-          <div className="w-64 bg-[var(--surface)] h-full p-4 space-y-2 shadow-2xl flex flex-col border-l border-[var(--line)]" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 z-50 bg-black/60 lg:hidden flex justify-end" onClick={() => setMenuOpen(false)}>
+          <div className="w-64 bg-[var(--surface)] h-full p-4 space-y-2 flex flex-col border-l border-[var(--line)]" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
               <h3 className="font-bold text-sm">Menu Utama</h3>
               <button onClick={() => setMenuOpen(false)} className="text-[var(--muted)]"><X size={18}/></button>
@@ -151,7 +151,7 @@ export default function Home() {
                 <button
                   key={id}
                   onClick={() => handleSelectView(id)}
-                  className={`flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left text-xs font-bold transition-all ${view === id ? "bg-[var(--brand)] text-white shadow-md shadow-emerald-500/20" : "text-[var(--muted)] hover:bg-[var(--surface-2)] hover:text-[var(--ink)]"}`}
+                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-xs font-bold transition-all ${view === id ? "bg-[var(--brand)] text-white" : "text-[var(--muted)] hover:bg-[var(--surface-2)] hover:text-[var(--ink)]"}`}
                 >
                   <Icon size={16} />
                   <span>{label}</span>
@@ -174,7 +174,7 @@ export default function Home() {
               <button
                 key={id}
                 onClick={() => setView(id)}
-                className={`flex w-full items-center gap-3 rounded-2xl px-3.5 py-2.5 text-left text-xs font-bold transition-all ${view === id ? "bg-[var(--brand)] text-white shadow-md shadow-emerald-500/20" : "text-[var(--muted)] hover:bg-[var(--surface)] hover:text-[var(--ink)]"}`}
+                className={`flex w-full items-center gap-3 rounded-lg px-3.5 py-2.5 text-left text-xs font-bold transition-all ${view === id ? "bg-[var(--brand)] text-white" : "text-[var(--muted)] hover:bg-[var(--surface)] hover:text-[var(--ink)]"}`}
               >
                 <Icon size={16} />
                 <span>{label}</span>
