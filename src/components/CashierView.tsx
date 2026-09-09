@@ -11,6 +11,7 @@ export default function CashierView({ products, query, setQuery }: { products: P
   const [selectedCat, setSelectedCat] = useState("Semua");
   const [payOpen, setPayOpen] = useState(false);
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
+  const [variantModalProduct, setVariantModalProduct] = useState<Product | null>(null);
   const { items, add, changeQty, remove, discount, clear } = useCart();
 
   const categories = useMemo(() => ["Semua", ...Array.from(new Set(products.map((p) => p.category)))], [products]);
@@ -29,6 +30,15 @@ export default function CashierView({ products, query, setQuery }: { products: P
     }
   };
 
+  const handleCardClick = (product: Product) => {
+    if (product.trackStock && product.stock <= 0) return;
+    if (product.variants?.length) {
+      setVariantModalProduct(product);
+    } else {
+      add(product);
+    }
+  };
+
   return (
     <div className="w-full max-w-full min-w-0">
       <div className="grid gap-5 lg:grid-cols-[1fr_390px] xl:grid-cols-[1fr_430px] w-full min-w-0">
@@ -36,8 +46,8 @@ export default function CashierView({ products, query, setQuery }: { products: P
         {/* Left Column: Menu Catalog Cockpit */}
         <div className="space-y-4 w-full min-w-0 pb-28 lg:pb-6">
           
-          {/* Square-style Category Cards */}
-          <div className="flex gap-2.5 overflow-x-auto pb-1 no-scrollbar w-full min-w-0">
+          {/* Category Chips Carousel */}
+          <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar w-full min-w-0">
             {categories.map((cat) => {
               const active = selectedCat === cat;
               const { icon: CatIcon } = getCatMeta(cat);
@@ -45,90 +55,71 @@ export default function CashierView({ products, query, setQuery }: { products: P
                 <button
                   key={cat}
                   onClick={() => setSelectedCat(cat)}
-                  className={`flex items-center gap-2 whitespace-nowrap shrink-0 rounded-2xl px-4 py-2.5 text-xs font-bold transition-all ${
+                  className={`flex items-center gap-1.5 whitespace-nowrap shrink-0 rounded-2xl px-3.5 py-2 text-xs font-bold transition-all ${
                     active
                       ? "bg-[var(--brand)] text-white shadow-md shadow-emerald-500/20 scale-[1.02]"
                       : "border border-[var(--line)] bg-[var(--surface)] text-[var(--muted)] hover:text-[var(--ink)] hover:border-slate-400/30"
                   }`}
                 >
-                  <CatIcon size={14} className={active ? "text-white" : "text-[var(--muted)]"} />
+                  <CatIcon size={13} className={active ? "text-white" : "text-[var(--muted)]"} />
                   <span>{cat}</span>
                 </button>
               );
             })}
           </div>
 
-          {/* Product Cards — High-density, Luxury Hardware feel */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 w-full min-w-0">
+          {/* SQUARE GRID KATALOG KOTAK-KOTAK (2-col di HP, 3-col di tablet, 4-col di desktop) */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3.5 w-full min-w-0">
             {visible.map((product) => {
               const outOfStock = product.trackStock && product.stock <= 0;
               const inCartCount = items.filter((i) => i.productId === product.id).reduce((sum, i) => sum + i.qty, 0);
-              const { badge } = getCatMeta(product.category);
+              const { icon: CatIcon, badge } = getCatMeta(product.category);
 
               return (
-                <div
+                <button
                   key={product.id}
-                  className={`group relative flex flex-col justify-between rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-4 transition-all duration-150 hover:border-[var(--brand)] hover:shadow-lg ${
-                    outOfStock ? "opacity-40 grayscale" : ""
-                  } ${inCartCount > 0 ? "border-[var(--brand-border)] bg-[var(--brand-soft)]/20" : ""}`}
+                  disabled={outOfStock}
+                  onClick={() => handleCardClick(product)}
+                  className={`group relative flex flex-col justify-between aspect-square rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-3 text-left transition-all duration-150 hover:border-[var(--brand)] hover:shadow-lg active:scale-95 select-none ${
+                    outOfStock ? "opacity-35 grayscale cursor-not-allowed" : "cursor-pointer"
+                  } ${inCartCount > 0 ? "border-[var(--brand)] ring-2 ring-[var(--brand-border)] bg-[var(--brand-soft)]/25" : ""}`}
                 >
-                  <div>
-                    {/* Top Metadata Row */}
-                    <div className="flex items-center justify-between gap-2">
-                      <span className={`inline-flex items-center rounded-lg border px-2 py-0.5 text-[10px] font-black uppercase tracking-wider ${badge}`}>
-                        {product.category}
+                  {/* Top Row: Icon + In-Cart Badge / Stock */}
+                  <div className="flex items-start justify-between w-full gap-1">
+                    <div className={`grid h-7 w-7 place-items-center rounded-xl border ${badge}`}>
+                      <CatIcon size={14} />
+                    </div>
+                    {inCartCount > 0 ? (
+                      <span className="flex items-center gap-0.5 rounded-full bg-[var(--brand)] px-2 py-0.5 text-[10px] font-black text-white shadow-xs">
+                        {inCartCount}
                       </span>
-                      {product.trackStock && (
-                        <span className={`text-[10px] font-bold tabular ${product.stock <= 5 ? "text-amber-500" : "text-[var(--muted)]"}`}>
-                          Stok: {product.stock}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Product Name & Pricing */}
-                    <h3 className="mt-2 text-sm font-bold text-[var(--ink)] leading-snug break-words group-hover:text-[var(--brand-dark)] transition-colors">
-                      {product.name}
-                    </h3>
-                    <div className="mt-2 flex items-baseline justify-between">
-                      <p className="text-base font-black text-[var(--ink)] tabular">
-                        <span className="text-xs font-bold text-[var(--muted)] mr-0.5">Rp</span>
-                        {product.price.toLocaleString("id-ID")}
-                      </p>
-                      {inCartCount > 0 && (
-                        <span className="flex items-center gap-1 rounded-full bg-[var(--brand)] px-2 py-0.5 text-[10px] font-black text-white shadow-xs">
-                          {inCartCount} di keranjang
-                        </span>
-                      )}
-                    </div>
+                    ) : product.trackStock ? (
+                      <span className={`text-[9px] font-bold tabular ${product.stock <= 5 ? "text-amber-500" : "text-[var(--muted)]"}`}>
+                        {product.stock}
+                      </span>
+                    ) : null}
                   </div>
 
-                  {/* Variant Selection or Direct Add */}
-                  {product.variants?.length ? (
-                    <div className="mt-3.5 pt-2.5 border-t border-[var(--line)]">
-                      <p className="text-[10px] font-bold text-[var(--muted)] mb-1.5 uppercase tracking-wider">Varian</p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {product.variants.map((v) => (
-                          <button
-                            key={v}
-                            disabled={outOfStock}
-                            onClick={() => add(product, v)}
-                            className="rounded-xl border border-[var(--line)] bg-[var(--surface-2)] px-2.5 py-1 text-[11px] font-bold text-[var(--ink-soft)] hover:border-[var(--brand)] hover:bg-[var(--brand-soft)] hover:text-[var(--brand-dark)] active:scale-95 transition-all"
-                          >
-                            {v}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <button
-                      disabled={outOfStock}
-                      onClick={() => add(product)}
-                      className="mt-3.5 flex w-full items-center justify-center gap-1.5 rounded-2xl bg-[var(--surface-2)] py-2.5 text-xs font-bold text-[var(--ink)] hover:bg-[var(--brand)] hover:text-white transition-all active:scale-95"
-                    >
-                      <Plus size={14} /> Tambah Menu
-                    </button>
-                  )}
-                </div>
+                  {/* Middle: Title (Truncated 2-lines) */}
+                  <div className="w-full my-auto py-1">
+                    <h3 className="text-xs sm:text-sm font-bold text-[var(--ink)] line-clamp-2 leading-snug group-hover:text-[var(--brand-dark)] transition-colors">
+                      {product.name}
+                    </h3>
+                    {product.variants?.length ? (
+                      <span className="inline-block text-[9px] text-[var(--muted)] font-medium mt-0.5">
+                        {product.variants.length} varian
+                      </span>
+                    ) : null}
+                  </div>
+
+                  {/* Bottom: Price Tag */}
+                  <div className="w-full pt-1 border-t border-[var(--line)]/60 flex items-baseline justify-between">
+                    <span className="text-[10px] text-[var(--muted)] font-semibold">Rp</span>
+                    <span className="text-xs sm:text-sm font-black text-[var(--brand-dark)] tabular">
+                      {product.price.toLocaleString("id-ID")}
+                    </span>
+                  </div>
+                </button>
               );
             })}
           </div>
@@ -333,6 +324,49 @@ export default function CashierView({ products, query, setQuery }: { products: P
                 >
                   Lanjut Pembayaran <ArrowRight size={16} />
                 </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal Pilihan Varian Rasa/Suhu (Saat Kartu Kotak Ditekan) */}
+        {variantModalProduct && (
+          <div
+            className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 backdrop-blur-xs"
+            onClick={() => setVariantModalProduct(null)}
+          >
+            <div
+              className="w-full max-w-sm rounded-3xl bg-[var(--surface)] border border-[var(--line)] p-5 shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-start justify-between pb-3 border-b border-[var(--line)]">
+                <div>
+                  <h3 className="font-bold text-base text-[var(--ink)]">{variantModalProduct.name}</h3>
+                  <p className="text-xs font-black text-[var(--brand-dark)] tabular mt-0.5">
+                    Rp {variantModalProduct.price.toLocaleString("id-ID")}
+                  </p>
+                </div>
+                <button onClick={() => setVariantModalProduct(null)} className="p-1 rounded-full text-[var(--muted)] hover:bg-[var(--surface-2)]">
+                  <X size={18} />
+                </button>
+              </div>
+
+              <div className="py-4">
+                <p className="text-xs font-bold text-[var(--muted)] mb-3">PILIH VARIAN RASA / SUHU:</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {variantModalProduct.variants?.map((v) => (
+                    <button
+                      key={v}
+                      onClick={() => {
+                        add(variantModalProduct, v);
+                        setVariantModalProduct(null);
+                      }}
+                      className="rounded-2xl border border-[var(--line)] bg-[var(--surface-2)] p-3 text-xs font-bold text-[var(--ink)] hover:border-[var(--brand)] hover:bg-[var(--brand-soft)] hover:text-[var(--brand-dark)] active:scale-95 transition-all text-center"
+                    >
+                      {v}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
