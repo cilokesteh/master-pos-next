@@ -3,53 +3,55 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --canvas: #f5f3ee;
-  --surface: #fffefa;
-  --surface-2: #eeebe4;
-  --surface-3: #e4e0d7;
-  --ink: #191816;
-  --ink-soft: #47443f;
-  --muted: #746f67;
-  --line: #dcd7cd;
-  --line-soft: #ebe7df;
-  --brand: #1f5b45;
-  --brand-hover: #174736;
-  --brand-soft: #e4eee9;
-  --brand-dark: #194c3a;
-  --brand-border: #9ebbad;
-  --accent-cta: #a4492f;
-  --accent-soft: #f3e4de;
-  --danger: #b63832;
-  --danger-soft: #f7e4e2;
-  --warning: #94620a;
-  --warning-soft: #f6edd5;
-  --shadow-1: 0 1px 2px rgba(38,32,24,.04), 0 4px 14px rgba(38,32,24,.035);
-  --shadow-2: 0 16px 40px rgba(38,32,24,.14);
+  /* Premium neutral light — clean retail hardware */
+  --canvas: #f4f5f7;
+  --surface: #ffffff;
+  --surface-2: #eef0f3;
+  --surface-3: #e3e6ea;
+  --ink: #111318;
+  --ink-soft: #3f454f;
+  --muted: #68707c;
+  --line: #d9dde3;
+  --line-soft: #e9ebef;
+  --brand: #176b4d;
+  --brand-hover: #11563d;
+  --brand-soft: #e5f2ec;
+  --brand-dark: #12563e;
+  --brand-border: #96c4ae;
+  --accent-cta: #b34c32;
+  --accent-soft: #f5e8e3;
+  --danger: #b4232c;
+  --danger-soft: #f9e7e9;
+  --warning: #8c6100;
+  --warning-soft: #f8efd5;
+  --shadow-1: 0 1px 2px rgba(16,24,40,.04), 0 5px 16px rgba(16,24,40,.045);
+  --shadow-2: 0 18px 48px rgba(16,24,40,.16);
 }
 
 .dark {
-  --canvas: #171614;
-  --surface: #211f1c;
-  --surface-2: #2b2925;
-  --surface-3: #37342f;
-  --ink: #f5f1e9;
-  --ink-soft: #d4cec3;
-  --muted: #aaa297;
-  --line: rgba(245,241,233,.12);
-  --line-soft: rgba(245,241,233,.065);
-  --brand: #28785a;
-  --brand-hover: #23684f;
-  --brand-soft: rgba(69,145,111,.16);
-  --brand-dark: #8bd4b4;
-  --brand-border: rgba(139,212,180,.36);
-  --accent-cta: #d06d4d;
-  --accent-soft: rgba(208,109,77,.14);
-  --danger: #ef8b83;
-  --danger-soft: rgba(239,139,131,.13);
-  --warning: #e8bc66;
-  --warning-soft: rgba(232,188,102,.13);
-  --shadow-1: 0 1px 2px rgba(0,0,0,.22), 0 6px 18px rgba(0,0,0,.12);
-  --shadow-2: 0 18px 48px rgba(0,0,0,.42);
+  /* Premium neutral dark — pure graphite, no brown/blue cast */
+  --canvas: #0b0d10;
+  --surface: #13161b;
+  --surface-2: #1a1e24;
+  --surface-3: #242930;
+  --ink: #f5f7fa;
+  --ink-soft: #d2d6dc;
+  --muted: #929aa6;
+  --line: rgba(255,255,255,.105);
+  --line-soft: rgba(255,255,255,.055);
+  --brand: #167554;
+  --brand-hover: #126346;
+  --brand-soft: rgba(40,145,105,.16);
+  --brand-dark: #82d8b3;
+  --brand-border: rgba(130,216,179,.34);
+  --accent-cta: #d56b4e;
+  --accent-soft: rgba(213,107,78,.14);
+  --danger: #ff8b91;
+  --danger-soft: rgba(255,139,145,.13);
+  --warning: #eac46d;
+  --warning-soft: rgba(234,196,109,.13);
+  --shadow-1: 0 1px 2px rgba(0,0,0,.32), 0 8px 22px rgba(0,0,0,.2);
+  --shadow-2: 0 20px 56px rgba(0,0,0,.5);
 }
 
 * { box-sizing: border-box; }
