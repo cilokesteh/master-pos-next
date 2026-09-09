@@ -55,17 +55,17 @@ export default function SyncSettingsView() {
       </div>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <div className="rounded-2xl border border-[var(--line)] bg-white p-4">
+        <div className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-4">
           <p className="text-xs font-semibold text-[var(--muted)]">Antrean Belum Sinkron</p>
           <p className="mt-1 text-2xl font-black text-amber-700 tabular">{stats.pending}</p>
           <span className="text-[11px] text-[var(--muted)]">Tersimpan aman di IndexedDB</span>
         </div>
-        <div className="rounded-2xl border border-[var(--line)] bg-white p-4">
+        <div className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-4">
           <p className="text-xs font-semibold text-[var(--muted)]">Data Tersinkron</p>
           <p className="mt-1 text-2xl font-black text-emerald-700 tabular">{stats.synced}</p>
           <span className="text-[11px] text-[var(--muted)]">Riwayat sinkron cloud</span>
         </div>
-        <div className="rounded-2xl border border-[var(--line)] bg-white p-4">
+        <div className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-4">
           <p className="text-xs font-semibold text-[var(--muted)]">Mode Operasional</p>
           <p className="mt-1 text-lg font-black text-[var(--brand-dark)]">Offline-First</p>
           <span className="text-[11px] text-[var(--muted)]">Bekerja tanpa ketergantungan internet</span>
@@ -79,7 +79,7 @@ export default function SyncSettingsView() {
       )}
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="rounded-3xl border border-[var(--line)] bg-white p-5">
+        <div className="rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-5">
           <h3 className="font-bold">Cadangkan Data (Export JSON)</h3>
           <p className="mt-1 text-xs text-[var(--muted)]">
             Unduh seluruh produk, riwayat transaksi, buku kasbon, dan pengeluaran ke file JSON lokal di HP / komputer.
@@ -92,12 +92,12 @@ export default function SyncSettingsView() {
           </button>
         </div>
 
-        <div className="rounded-3xl border border-[var(--line)] bg-white p-5">
+        <div className="rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-5">
           <h3 className="font-bold">Pulihkan Data (Import JSON)</h3>
           <p className="mt-1 text-xs text-[var(--muted)]">
             Pulihkan data dari file cadangan jika berpindah perangkat kasir baru.
           </p>
-          <label className="mt-4 inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-[var(--line)] bg-[var(--surface-2)] px-4 py-2.5 text-xs font-bold text-[var(--ink)] hover:bg-zinc-200">
+          <label className="mt-4 inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-[var(--line)] bg-[var(--surface-2)] px-4 py-2.5 text-xs font-bold text-[var(--ink)] hover:bg-[var(--surface-3)]">
             <Upload size={15} /> {loading ? "Memproses..." : "Pilih File Cadangan"}
             <input type="file" accept=".json" onChange={handleImport} className="hidden" />
           </label>

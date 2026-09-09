@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
+import { addProductToCart } from "./helpers";
 
 test("mobile user can view cart items in drawer, edit quantity, and proceed to checkout", async ({ page }) => {
-  // Only applies to mobile viewports where floating dock and drawer exist
   if (page.viewportSize()!.width >= 1024) {
     test.skip(true, "Mobile-specific drawer test");
   }
@@ -9,9 +9,9 @@ test("mobile user can view cart items in drawer, edit quantity, and proceed to c
   await page.goto("/");
   await page.getByRole("button", { name: "Kasir" }).first().click();
 
-  // Add items
-  await page.getByRole("button", { name: "Manis" }).first().click();
-  await page.getByRole("button", { name: "Pedas" }).first().click();
+  // Add items via modal
+  await addProductToCart(page, "Es Teh Manis", "Manis");
+  await addProductToCart(page, "Nasi Goreng Spesial", "Pedas");
 
   // Mobile cart bar should reflect 2 items
   const cartTrigger = page.getByRole("button", { name: /item di keranjang/i });

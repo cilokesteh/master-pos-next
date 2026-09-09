@@ -113,7 +113,7 @@ export default function PaymentModal({ totals, items, onClose }: { totals: any; 
   if (completedTx) {
     return (
       <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/60 p-4">
-        <div className="w-full max-w-sm rounded-3xl bg-white p-6 text-center">
+        <div className="w-full max-w-sm rounded-3xl bg-[var(--surface)] p-6 text-center">
           <CheckCircle2 className="mx-auto h-12 w-12 text-[var(--brand)]" />
           <h3 className="mt-2 text-xl font-bold">Transaksi Sukses!</h3>
           <p className="text-sm text-[var(--muted)]">No. Struk: {completedTx.receiptNumber}</p>
@@ -122,8 +122,8 @@ export default function PaymentModal({ totals, items, onClose }: { totals: any; 
             {completedTx.paymentMethod === "cash" && <div className="mt-1 flex justify-between text-xs text-[var(--muted)]"><span>Kembalian</span><span className="font-bold text-[var(--brand)]">Rp {completedTx.cashChange.toLocaleString("id-ID")}</span></div>}
           </div>
           <div className="grid grid-cols-3 gap-2">
-            <button onClick={() => printDirectThermal(completedTx, DEFAULT_STORE, 58)} className="flex flex-col items-center gap-1 rounded-xl border border-[var(--line)] p-2.5 text-xs font-semibold hover:bg-zinc-50"><Printer size={16}/> Cetak</button>
-            <button onClick={() => { const doc = generateThermalPdf(completedTx, DEFAULT_STORE, 58); doc.save(`${completedTx.receiptNumber}.pdf`); }} className="flex flex-col items-center gap-1 rounded-xl border border-[var(--line)] p-2.5 text-xs font-semibold hover:bg-zinc-50"><FileText size={16}/> PDF</button>
+            <button onClick={() => printDirectThermal(completedTx, DEFAULT_STORE, 58)} className="flex flex-col items-center gap-1 rounded-xl border border-[var(--line)] p-2.5 text-xs font-semibold hover:bg-[var(--surface-2)]"><Printer size={16}/> Cetak</button>
+            <button onClick={() => { const doc = generateThermalPdf(completedTx, DEFAULT_STORE, 58); doc.save(`${completedTx.receiptNumber}.pdf`); }} className="flex flex-col items-center gap-1 rounded-xl border border-[var(--line)] p-2.5 text-xs font-semibold hover:bg-[var(--surface-2)]"><FileText size={16}/> PDF</button>
             <button onClick={() => shareViaWhatsApp(completedTx, DEFAULT_STORE, completedTx.customerPhone)} className="flex flex-col items-center gap-1 rounded-xl border border-[var(--line)] p-2.5 text-xs font-semibold text-[var(--brand-dark)] hover:bg-emerald-50"><Send size={16}/> WA</button>
           </div>
           <button onClick={onClose} className="mt-5 w-full rounded-xl bg-[var(--brand)] py-3 font-bold text-white">Selesai / Transaksi Baru</button>
@@ -134,10 +134,10 @@ export default function PaymentModal({ totals, items, onClose }: { totals: any; 
 
   return (
     <div className="fixed inset-0 z-[70] flex items-end justify-center bg-black/60 p-0 sm:items-center sm:p-4">
-      <div className="w-full max-w-lg rounded-t-3xl bg-white p-5 sm:rounded-3xl">
+      <div className="w-full max-w-lg rounded-t-3xl bg-[var(--surface)] p-5 sm:rounded-3xl">
         <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
           <div><h3 className="font-bold">Pembayaran</h3><p className="text-xs text-[var(--muted)]">Total Tagihan: Rp {totals.total.toLocaleString("id-ID")}</p></div>
-          <button onClick={onClose} className="rounded-full p-1 hover:bg-zinc-100"><X size={18}/></button>
+          <button onClick={onClose} className="rounded-full p-1 hover:bg-[var(--surface-2)]"><X size={18}/></button>
         </div>
 
         <div className="mt-4 grid grid-cols-4 gap-2">
@@ -153,7 +153,7 @@ export default function PaymentModal({ totals, items, onClose }: { totals: any; 
             <input type="number" value={cashInput} onChange={(e) => setCashInput(e.target.value)} className="w-full rounded-2xl border border-[var(--line)] bg-[var(--surface-2)] py-3 text-center text-2xl font-bold tabular outline-none focus:border-[var(--brand)]" />
             <div className="flex flex-wrap gap-1.5">
               {quickCashPresets.map((p) => (
-                <button key={p} onClick={() => setCashInput(String(p))} className="rounded-lg border border-[var(--line)] bg-white px-2.5 py-1.5 text-xs font-semibold tabular hover:border-[var(--brand)]">
+                <button key={p} onClick={() => setCashInput(String(p))} className="rounded-lg border border-[var(--line)] bg-[var(--surface)] px-2.5 py-1.5 text-xs font-semibold tabular hover:border-[var(--brand)]">
                   {p === totals.total ? "Uang Pas" : `Rp ${p.toLocaleString("id-ID")}`}
                 </button>
               ))}

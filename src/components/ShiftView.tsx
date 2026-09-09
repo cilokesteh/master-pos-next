@@ -141,7 +141,7 @@ export default function ShiftView() {
       </div>
 
       {!currentShift ? (
-        <div className="rounded-3xl border border-[var(--line)] bg-white p-6">
+        <div className="rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-6">
           <h3 className="text-lg font-bold">Buka Shift Kasir Baru</h3>
           <p className="text-xs text-[var(--muted)]">Masukkan uang modal awal di laci kasir pagi ini.</p>
           <div className="mt-4 flex max-w-md gap-2">
@@ -160,7 +160,7 @@ export default function ShiftView() {
       ) : (
         <div className="grid gap-6 lg:grid-cols-[1fr_400px]">
           <div className="space-y-6">
-            <div className="rounded-3xl border border-[var(--line)] bg-white p-5">
+            <div className="rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-5">
               <h3 className="font-bold">Catat Pengeluaran Operasional (Petty Cash)</h3>
               <p className="text-xs text-[var(--muted)]">Beli es batu, galon, bumbu dapur, plastik, dll.</p>
               <div className="mt-3 grid gap-2 sm:grid-cols-3">
@@ -181,7 +181,7 @@ export default function ShiftView() {
                   <select
                     value={expenseSource}
                     onChange={(e: any) => setExpenseSource(e.target.value)}
-                    className="flex-1 rounded-xl border border-[var(--line)] bg-white px-2 py-1 text-xs"
+                    className="flex-1 rounded-xl border border-[var(--line)] bg-[var(--surface)] px-2 py-1 text-xs"
                   >
                     <option value="laci">Dari Laci</option>
                     <option value="owner">Uang Owner</option>
@@ -210,7 +210,7 @@ export default function ShiftView() {
             </div>
           </div>
 
-          <div className="rounded-3xl border border-[var(--line)] bg-white p-5 shadow-sm">
+          <div className="rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-5 shadow-sm">
             <h3 className="font-bold">Rekap Laci Kasir (Z-Report)</h3>
             <p className="text-xs text-[var(--muted)]">Shift ID: {currentShift.id}</p>
 
@@ -245,7 +245,7 @@ export default function ShiftView() {
                 <div className="flex gap-2 pt-3">
                   <button
                     onClick={() => printDirectZReport({ ...zReport, shiftId: currentShift.id, cashierName: currentShift.cashierName }, DEFAULT_STORE, 58)}
-                    className="flex-1 flex items-center justify-center gap-1 rounded-xl border border-[var(--line)] py-2 text-xs font-bold hover:bg-zinc-50"
+                    className="flex-1 flex items-center justify-center gap-1 rounded-xl border border-[var(--line)] py-2 text-xs font-bold hover:bg-[var(--surface-2)]"
                   >
                     <Printer size={14} /> Cetak Thermal
                   </button>
@@ -254,7 +254,7 @@ export default function ShiftView() {
                       const doc = generateZReportPdf({ ...zReport, shiftId: currentShift.id, cashierName: currentShift.cashierName }, DEFAULT_STORE, 58);
                       doc.save(`ZReport_${currentShift.id}.pdf`);
                     }}
-                    className="flex-1 flex items-center justify-center gap-1 rounded-xl border border-[var(--line)] py-2 text-xs font-bold hover:bg-zinc-50"
+                    className="flex-1 flex items-center justify-center gap-1 rounded-xl border border-[var(--line)] py-2 text-xs font-bold hover:bg-[var(--surface-2)]"
                   >
                     <FileText size={14} /> PDF
                   </button>

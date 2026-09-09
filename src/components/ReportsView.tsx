@@ -55,40 +55,40 @@ export default function ReportsView() {
           <p className="text-xs text-[var(--muted)]">Rekap pendapatan, HPP, laba kotor, dan kasbon.</p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex rounded-xl border border-[var(--line)] bg-white p-1">
+          <div className="flex rounded-xl border border-[var(--line)] bg-[var(--surface)] p-1">
             <button onClick={() => setRange("today")} className={`rounded-lg px-3 py-1.5 text-xs font-bold ${range === "today" ? "bg-[var(--brand)] text-white" : "text-[var(--muted)]"}`}>Hari Ini</button>
             <button onClick={() => setRange("all")} className={`rounded-lg px-3 py-1.5 text-xs font-bold ${range === "all" ? "bg-[var(--brand)] text-white" : "text-[var(--muted)]"}`}>Semua</button>
           </div>
-          <button onClick={exportCsv} className="flex items-center gap-1.5 rounded-xl border border-[var(--line)] bg-white px-3 py-2 text-xs font-bold text-[var(--ink)] hover:bg-zinc-50">
+          <button onClick={exportCsv} className="flex items-center gap-1.5 rounded-xl border border-[var(--line)] bg-[var(--surface)] px-3 py-2 text-xs font-bold text-[var(--ink)] hover:bg-[var(--surface-2)]">
             <Download size={14} /> CSV
           </button>
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <div className="rounded-2xl border border-[var(--line)] bg-white p-4">
+        <div className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-4">
           <p className="text-xs font-semibold text-[var(--muted)]">Total Omzet</p>
           <p className="mt-1 text-xl font-black text-[var(--brand-dark)] tabular">Rp {stats.omzet.toLocaleString("id-ID")}</p>
           <span className="text-[11px] text-[var(--muted)]">{stats.transactions} transaksi</span>
         </div>
-        <div className="rounded-2xl border border-[var(--line)] bg-white p-4">
+        <div className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-4">
           <p className="text-xs font-semibold text-[var(--muted)]">Estimasi Laba Kotor</p>
-          <p className="mt-1 text-xl font-black text-emerald-700 tabular">Rp {stats.grossProfit.toLocaleString("id-ID")}</p>
+          <p className="mt-1 text-xl font-black text-emerald-700 dark:text-emerald-400 tabular">Rp {stats.grossProfit.toLocaleString("id-ID")}</p>
           <span className="text-[11px] text-[var(--muted)]">HPP: Rp {stats.hpp.toLocaleString("id-ID")}</span>
         </div>
-        <div className="rounded-2xl border border-[var(--line)] bg-white p-4">
+        <div className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-4">
           <p className="text-xs font-semibold text-[var(--muted)]">Uang Tunai Laci</p>
-          <p className="mt-1 text-xl font-black text-blue-700 tabular">Rp {stats.cash.toLocaleString("id-ID")}</p>
+          <p className="mt-1 text-xl font-black text-blue-700 dark:text-blue-400 tabular">Rp {stats.cash.toLocaleString("id-ID")}</p>
           <span className="text-[11px] text-[var(--muted)]">Tunai langsung</span>
         </div>
-        <div className="rounded-2xl border border-[var(--line)] bg-white p-4">
+        <div className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-4">
           <p className="text-xs font-semibold text-[var(--muted)]">Kasbon / Piutang Baru</p>
-          <p className="mt-1 text-xl font-black text-amber-700 tabular">Rp {stats.kasbon.toLocaleString("id-ID")}</p>
+          <p className="mt-1 text-xl font-black text-amber-700 dark:text-amber-400 tabular">Rp {stats.kasbon.toLocaleString("id-ID")}</p>
           <span className="text-[11px] text-[var(--muted)]">Belum terbayar</span>
         </div>
       </div>
 
-      <div className="rounded-3xl border border-[var(--line)] bg-white p-5">
+      <div className="rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-5">
         <h3 className="font-bold">Top Menu / Produk Terlaris</h3>
         <div className="mt-3 divide-y divide-[var(--line)]">
           {ranked.length === 0 ? (

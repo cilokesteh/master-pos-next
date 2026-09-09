@@ -151,19 +151,19 @@ export default function KasbonView() {
       </div>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <div className="rounded-2xl border border-[var(--line)] bg-white p-4">
+        <div className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-4">
           <p className="text-xs font-semibold text-[var(--muted)]">Total Piutang Belum Lunas</p>
-          <p className="mt-1 text-2xl font-black text-amber-700 tabular">Rp {totalOutstanding.toLocaleString("id-ID")}</p>
+          <p className="mt-1 text-2xl font-black text-amber-700 dark:text-amber-400 tabular">Rp {totalOutstanding.toLocaleString("id-ID")}</p>
           <span className="text-[11px] text-[var(--muted)]">Dari {customers.filter((c) => c.totalDebt > 0).length} pelanggan</span>
         </div>
-        <div className="rounded-2xl border border-[var(--line)] bg-white p-4">
+        <div className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-4">
           <p className="text-xs font-semibold text-[var(--muted)]">Total Data Pelanggan</p>
           <p className="mt-1 text-2xl font-black text-[var(--brand-dark)] tabular">{customers.length}</p>
           <span className="text-[11px] text-[var(--muted)]">Buku kontak aktif</span>
         </div>
-        <div className="rounded-2xl border border-[var(--line)] bg-white p-4">
+        <div className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-4">
           <p className="text-xs font-semibold text-[var(--muted)]">Status Kasbon</p>
-          <p className="mt-1 text-2xl font-black text-emerald-700 tabular">
+          <p className="mt-1 text-2xl font-black text-emerald-700 dark:text-emerald-400 tabular">
             {customers.filter((c) => c.totalDebt === 0).length} Lunas
           </p>
           <span className="text-[11px] text-[var(--muted)]">Pelanggan bersih hutang</span>
@@ -171,7 +171,7 @@ export default function KasbonView() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
-        <div className="rounded-3xl border border-[var(--line)] bg-white p-5">
+        <div className="rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-5">
           <div className="mb-4 flex items-center gap-2">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]" />
@@ -225,7 +225,7 @@ export default function KasbonView() {
           </div>
         </div>
 
-        <div className="rounded-3xl border border-[var(--line)] bg-white p-5 shadow-sm">
+        <div className="rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-5 shadow-sm">
           <h3 className="font-bold">Detail & Bayar Cicilan</h3>
           {selectedCust ? (
             <div className="mt-4 space-y-4">
@@ -256,14 +256,14 @@ export default function KasbonView() {
                   <div className="flex gap-1">
                     <button
                       onClick={() => setPaymentAmount(String(selectedCust.totalDebt))}
-                      className="rounded-lg border border-[var(--line)] bg-white px-2.5 py-1 text-[11px] font-bold hover:border-[var(--brand)]"
+                      className="rounded-lg border border-[var(--line)] bg-[var(--surface)] px-2.5 py-1 text-[11px] font-bold hover:border-[var(--brand)]"
                     >
                       Lunasi Semua
                     </button>
                     {selectedCust.totalDebt > 20000 && (
                       <button
                         onClick={() => setPaymentAmount("20000")}
-                        className="rounded-lg border border-[var(--line)] bg-white px-2.5 py-1 text-[11px] font-bold hover:border-[var(--brand)]"
+                        className="rounded-lg border border-[var(--line)] bg-[var(--surface)] px-2.5 py-1 text-[11px] font-bold hover:border-[var(--brand)]"
                       >
                         20.000
                       </button>
@@ -271,7 +271,7 @@ export default function KasbonView() {
                     {selectedCust.totalDebt > 50000 && (
                       <button
                         onClick={() => setPaymentAmount("50000")}
-                        className="rounded-lg border border-[var(--line)] bg-white px-2.5 py-1 text-[11px] font-bold hover:border-[var(--brand)]"
+                        className="rounded-lg border border-[var(--line)] bg-[var(--surface)] px-2.5 py-1 text-[11px] font-bold hover:border-[var(--brand)]"
                       >
                         50.000
                       </button>
@@ -333,7 +333,7 @@ export default function KasbonView() {
 
       {modalNewOpen && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-4">
-          <div className="w-full max-w-sm rounded-3xl bg-white p-5">
+          <div className="w-full max-w-sm rounded-3xl bg-[var(--surface)] p-5">
             <h3 className="text-base font-bold">Tambah Pelanggan Baru</h3>
             <div className="mt-3 space-y-2">
               <input

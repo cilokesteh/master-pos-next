@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { addProductToCart } from "./helpers";
 
 async function assertNoOverflow(page: any) {
   const overflow = await page.evaluate(() => ({
@@ -18,7 +19,7 @@ test("shell, modules, and responsive layout work", async ({ page }, testInfo) =>
   page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
 
   await page.goto("/");
-  await expect(page.getByText("Master POS").first()).toBeVisible();
+  await expect(page.getByText("MP", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("Es Teh Manis").first()).toBeVisible();
   await assertNoOverflow(page);
 
@@ -44,7 +45,7 @@ test("shell, modules, and responsive layout work", async ({ page }, testInfo) =>
 
 test("cashier transaction persists to IndexedDB and report", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "Manis" }).first().click();
+  await addProductToCart(page, "Es Teh Manis", "Manis");
 
   const isMobile = page.viewportSize()!.width < 1024;
   if (isMobile) {
@@ -76,7 +77,12 @@ test("cashier transaction persists to IndexedDB and report", async ({ page }) =>
   });
   expect(txCount).toBe(1);
 
-  await page.getByRole("button", { name: "Laporan" }).first().click();
+  const isMobileView = page.viewportSize()!.width < 1024;
+  if (isMobileView) {
+    await page.getByRole("button", { name: "Laporan" }).first().click();
+  } else {
+    await page.getByRole("button", { name: "Laporan", exact: true }).first().click();
+  }
   await expect(page.getByText("Rp 3.000").first()).toBeVisible();
 });
 
@@ -117,7 +123,7 @@ test("PWA service worker registers and offline reload serves app", async ({ page
   const failedRequests: string[] = [];
   page.on("requestfailed", (request) => failedRequests.push(request.url()));
   await page.reload();
-  await expect(page.getByText("Master POS").first()).toBeVisible();
+  await expect(page.getByText("MP", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("Es Teh Manis").first()).toBeVisible();
   expect(failedRequests.filter((url) => url.startsWith("http://127.0.0.1:4173"))).toEqual([]);
 });

@@ -44,11 +44,12 @@
   --line: rgba(255, 255, 255, 0.08);
   --line-soft: rgba(255, 255, 255, 0.04);
 
-  --brand: #10b981;
-  --brand-hover: #059669;
-  --brand-soft: rgba(16, 185, 129, 0.12);
-  --brand-dark: #34d399;
-  --brand-border: rgba(16, 185, 129, 0.25);
+  /* Dark theme: darker action background passes white-text WCAG AA */
+  --brand: #047857;
+  --brand-hover: #065f46;
+  --brand-soft: rgba(16, 185, 129, 0.14);
+  --brand-dark: #6ee7b7;
+  --brand-border: rgba(52, 211, 153, 0.35);
 
   --accent-cta: #f43f5e;
   --accent-soft: rgba(244, 63, 94, 0.12);
