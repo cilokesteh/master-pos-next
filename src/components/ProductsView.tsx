@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Edit2, PackagePlus, Plus, Search, Trash2 } from "lucide-react";
+import { Edit2, PackagePlus, Plus, Search, Trash2, Tag, Boxes, AlertCircle } from "lucide-react";
 import { db, type Product } from "@/lib/db";
 import { calculateMargin, normalizeVariants, stockStatus } from "@/lib/product-domain.mjs";
 
@@ -98,36 +98,41 @@ export default function ProductsView() {
   const marginPreview = calculateMargin(Number(cost) || 0, Number(price) || 0);
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <div className="space-y-6 max-w-full">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--line)] pb-4">
         <div>
-          <h2 className="text-xl font-bold">Katalog Produk & Kontrol Stok</h2>
-          <p className="text-xs text-[var(--muted)]">Atur harga jual, HPP/modal, varian rasa, dan stok warung.</p>
+          <h2 className="text-lg sm:text-xl font-extrabold text-[var(--ink)] tracking-tight">Katalog Produk & Kontrol Stok</h2>
+          <p className="text-xs text-[var(--muted)] font-medium mt-0.5">Atur harga jual, HPP/modal, varian rasa, dan stok warung.</p>
         </div>
         <button
           onClick={() => openForm()}
-          className="flex items-center gap-1.5 rounded-xl bg-[var(--brand)] px-3.5 py-2 text-xs font-bold text-white hover:bg-[var(--brand-dark)]"
+          className="flex items-center gap-1.5 rounded-xl bg-[var(--brand)] hover:bg-[var(--brand-hover)] px-4 py-2.5 text-xs font-extrabold text-white shadow-xs transition-all cursor-pointer"
         >
-          <PackagePlus size={14} /> Tambah Produk
+          <PackagePlus size={15} /> <span>Tambah Produk</span>
         </button>
       </div>
 
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]" />
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center justify-between">
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Cari produk atau barcode..."
-            className="w-full rounded-xl border border-[var(--line)] py-2 pl-9 pr-3 text-xs outline-none focus:border-[var(--brand)]"
+            placeholder="Cari nama produk atau scan barcode..."
+            className="w-full rounded-xl border border-[var(--line)] bg-[var(--surface)] py-2.5 pl-9.5 pr-4 text-xs font-medium outline-none focus:border-[var(--brand)] transition-all shadow-2xs"
           />
         </div>
-        <div className="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+
+        <div className="flex gap-1.5 overflow-x-auto no-scrollbar py-1">
           {categories.map((c) => (
             <button
               key={c}
               onClick={() => setSelectedCat(c)}
-              className={`rounded-xl px-3 py-1.5 text-xs font-bold whitespace-nowrap ${selectedCat === c ? "bg-[var(--brand)] text-white" : "border border-[var(--line)] bg-[var(--surface)] text-[var(--muted)]"}`}
+              className={`rounded-xl px-3 py-1.5 text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+                selectedCat === c
+                  ? "bg-[var(--brand)] text-white shadow-2xs font-extrabold"
+                  : "border border-[var(--line)] bg-[var(--surface)] text-[var(--muted)] hover:text-[var(--ink)]"
+              }`}
             >
               {c}
             </button>
@@ -135,59 +140,66 @@ export default function ProductsView() {
         </div>
       </div>
 
-      <div className="rounded-xl border border-[var(--line)] bg-[var(--surface)] p-4">
-        <div className="divide-y divide-[var(--line)]">
+      {/* Modern Product List */}
+      <div className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] shadow-card overflow-hidden">
+        <div className="divide-y divide-[var(--line-soft)]">
           {filtered.length === 0 ? (
-            <p className="py-8 text-center text-xs text-[var(--muted)]">Tidak ada produk ditemukan.</p>
+            <p className="py-12 text-center text-xs text-[var(--muted)]">Tidak ada produk ditemukan.</p>
           ) : (
             filtered.map((prod) => {
-              const status = stockStatus(prod.stock, 5, prod.trackStock);
-              const margin = calculateMargin(prod.cost, prod.price);
+              const status = stockStatus(prod);
               return (
-                <div key={prod.id} className="flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
+                <div
+                  key={prod.id}
+                  className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 sm:p-4 gap-3 hover:bg-[var(--surface-2)]/50 transition-colors"
+                >
+                  <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <h4 className="font-bold text-sm">{prod.name}</h4>
-                      <span className="rounded-md bg-[var(--surface-2)] px-2 py-0.5 text-[10px] font-semibold text-[var(--muted)]">
+                      <h4 className="font-extrabold text-sm text-[var(--ink)] leading-snug">{prod.name}</h4>
+                      <span className="rounded-md bg-[var(--surface-2)] px-2 py-0.5 text-[10px] font-bold text-[var(--muted)]">
                         {prod.category}
                       </span>
                     </div>
-                    <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-[var(--muted)]">
-                      <span>Jual: <strong className="text-[var(--ink)] tabular">Rp {prod.price.toLocaleString("id-ID")}</strong></span>
-                      <span>Modal: <span className="tabular">Rp {prod.cost.toLocaleString("id-ID")}</span></span>
-                      <span className="text-emerald-700 font-medium">Margin: +Rp {margin.amount.toLocaleString("id-ID")} ({margin.percent}%)</span>
-                      {prod.barcode && <span>Barcode: {prod.barcode}</span>}
+
+                    <div className="mt-1.5 flex flex-wrap items-center gap-3 text-xs text-[var(--muted)] font-medium">
+                      <span>Harga Jual: <strong className="text-[var(--ink)] font-black tabular">Rp {prod.price.toLocaleString("id-ID")}</strong></span>
+                      <span>HPP Modal: <strong className="tabular">Rp {prod.cost.toLocaleString("id-ID")}</strong></span>
+                      {prod.variants?.length ? (
+                        <span className="text-[var(--brand-dark)] font-bold">Varian: {prod.variants.join(", ")}</span>
+                      ) : null}
                     </div>
-                    {prod.variants?.length > 0 && (
-                      <div className="mt-1.5 flex flex-wrap gap-1">
-                        {prod.variants.map((v) => (
-                          <span key={v} className="rounded-md bg-zinc-100 px-1.5 py-0.5 text-[9px] text-zinc-600">
-                            {v}
-                          </span>
-                        ))}
-                      </div>
-                    )}
                   </div>
 
-                  <div className="flex items-center justify-between sm:justify-end gap-3 pt-2 sm:pt-0">
+                  <div className="flex items-center justify-between sm:justify-end gap-3 border-t sm:border-t-0 border-[var(--line-soft)] pt-2 sm:pt-0">
                     <div className="text-left sm:text-right">
                       {prod.trackStock ? (
-                        <div>
-                          <span className={`inline-block rounded-lg px-2 py-0.5 text-xs font-bold ${status === "out" ? "bg-rose-100 text-rose-800" : status === "low" ? "bg-amber-100 text-amber-800" : "bg-emerald-100 text-emerald-800"}`}>
-                            {status === "out" ? "Habis (0)" : `Stok: ${prod.stock} ${prod.unit}`}
-                          </span>
-                        </div>
-                      ) : (
-                        <span className="rounded-lg bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold text-zinc-500">
-                          Stok Unlimited (F&B)
+                        <span className={`inline-block px-2.5 py-1 rounded-lg text-xs font-black tabular ${
+                          status === "out"
+                            ? "bg-rose-500/15 text-rose-600 dark:text-rose-400"
+                            : status === "low"
+                            ? "bg-amber-500/15 text-amber-700 dark:text-amber-400"
+                            : "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
+                        }`}>
+                          {status === "out" ? "Stok Habis" : status === "low" ? `Sisa ${prod.stock}` : `Stok: ${prod.stock}`}
                         </span>
+                      ) : (
+                        <span className="text-[11px] font-bold text-[var(--muted)]">Stok Bebas (F&B)</span>
                       )}
                     </div>
-                    <div className="flex gap-1">
-                      <button onClick={() => openForm(prod)} className="rounded-lg p-2 text-[var(--muted)] hover:bg-[var(--surface-2)] hover:text-[var(--ink)]">
+
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => openForm(prod)}
+                        className="rounded-xl p-2 text-[var(--muted)] hover:bg-[var(--surface-2)] hover:text-[var(--ink)] transition-colors"
+                        title="Edit Produk"
+                      >
                         <Edit2 size={15} />
                       </button>
-                      <button onClick={() => handleDelete(prod.id)} className="rounded-lg p-2 text-[var(--muted)] hover:bg-rose-50 hover:text-[var(--danger)]">
+                      <button
+                        onClick={() => handleDelete(prod.id)}
+                        className="rounded-xl p-2 text-[var(--muted)] hover:bg-rose-500/10 hover:text-[var(--danger)] transition-colors"
+                        title="Hapus Produk"
+                      >
                         <Trash2 size={15} />
                       </button>
                     </div>
@@ -199,73 +211,137 @@ export default function ProductsView() {
         </div>
       </div>
 
+      {/* Modal Form Tambah / Edit Produk */}
       {modalOpen && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-4">
-          <div className="w-full max-w-md rounded-xl bg-[var(--surface)] p-5">
-            <h3 className="text-base font-bold">{editing ? "Edit Produk" : "Tambah Produk Baru"}</h3>
-            <div className="mt-3 space-y-2.5 max-h-[75vh] overflow-y-auto pr-1 text-xs">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-100" onClick={() => setModalOpen(false)}>
+          <div className="w-full max-w-md rounded-2xl bg-[var(--surface)] border border-[var(--line)] p-5 shadow-2xl animate-in zoom-in-95 duration-150" onClick={(e) => e.stopPropagation()}>
+            <h3 className="font-extrabold text-base text-[var(--ink)] pb-3 border-b border-[var(--line)]">
+              {editing ? "Edit Detail Produk" : "Tambah Produk Baru"}
+            </h3>
+
+            <div className="space-y-3 py-3.5 text-xs max-h-[75vh] overflow-y-auto pr-1 no-scrollbar">
               <div>
-                <label className="font-bold text-[var(--muted)]">Nama Produk</label>
-                <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Contoh: Es Teh Manis / Beras 5kg" className="mt-1 w-full rounded-xl border border-[var(--line)] p-2.5 outline-none focus:border-[var(--brand)]" />
+                <label className="font-bold text-[var(--muted)] block mb-1">Nama Produk:</label>
+                <input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Contoh: Es Teh Manis / Beras 5kg"
+                  className="w-full rounded-xl border border-[var(--line)] bg-[var(--surface-2)] p-2.5 outline-none focus:border-[var(--brand)] focus:bg-[var(--surface)]"
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="font-bold text-[var(--muted)]">Kategori</label>
-                  <input value={category} onChange={(e) => setCategory(e.target.value)} placeholder="Makanan / Minuman / Sembako" className="mt-1 w-full rounded-xl border border-[var(--line)] p-2.5 outline-none focus:border-[var(--brand)]" />
+                  <label className="font-bold text-[var(--muted)] block mb-1">Kategori:</label>
+                  <input
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    placeholder="Makanan / Minuman / Sembako"
+                    className="w-full rounded-xl border border-[var(--line)] bg-[var(--surface-2)] p-2.5 outline-none focus:border-[var(--brand)] focus:bg-[var(--surface)]"
+                  />
                 </div>
                 <div>
-                  <label className="font-bold text-[var(--muted)]">Satuan</label>
-                  <input value={unit} onChange={(e) => setUnit(e.target.value)} placeholder="porsi / cup / pcs / kg" className="mt-1 w-full rounded-xl border border-[var(--line)] p-2.5 outline-none focus:border-[var(--brand)]" />
+                  <label className="font-bold text-[var(--muted)] block mb-1">Satuan:</label>
+                  <input
+                    value={unit}
+                    onChange={(e) => setUnit(e.target.value)}
+                    placeholder="porsi / cup / pcs / kg"
+                    className="w-full rounded-xl border border-[var(--line)] bg-[var(--surface-2)] p-2.5 outline-none focus:border-[var(--brand)] focus:bg-[var(--surface)]"
+                  />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="font-bold text-[var(--muted)]">Harga Jual (Rp)</label>
-                  <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="15000" className="mt-1 w-full rounded-xl border border-[var(--line)] p-2.5 tabular outline-none focus:border-[var(--brand)]" />
+                  <label className="font-bold text-[var(--muted)] block mb-1">Harga Jual (Rp):</label>
+                  <input
+                    type="number"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    placeholder="15000"
+                    className="w-full rounded-xl border border-[var(--line)] bg-[var(--surface-2)] p-2.5 tabular font-bold outline-none focus:border-[var(--brand)] focus:bg-[var(--surface)]"
+                  />
                 </div>
                 <div>
-                  <label className="font-bold text-[var(--muted)]">Harga Modal / HPP (Rp)</label>
-                  <input type="number" value={cost} onChange={(e) => setCost(e.target.value)} placeholder="9000" className="mt-1 w-full rounded-xl border border-[var(--line)] p-2.5 tabular outline-none focus:border-[var(--brand)]" />
+                  <label className="font-bold text-[var(--muted)] block mb-1">Harga Modal / HPP (Rp):</label>
+                  <input
+                    type="number"
+                    value={cost}
+                    onChange={(e) => setCost(e.target.value)}
+                    placeholder="9000"
+                    className="w-full rounded-xl border border-[var(--line)] bg-[var(--surface-2)] p-2.5 tabular font-bold outline-none focus:border-[var(--brand)] focus:bg-[var(--surface)]"
+                  />
                 </div>
               </div>
 
-              {price && (
-                <div className="rounded-xl bg-[var(--surface-2)] p-2.5 text-[11px]">
-                  <span className="text-[var(--muted)]">Estimasi Cuan: </span>
-                  <strong className="text-emerald-700 tabular">+Rp {marginPreview.amount.toLocaleString("id-ID")} ({marginPreview.percent}%)</strong>
-                </div>
-              )}
+              <div className="rounded-xl bg-[var(--surface-2)]/60 p-2.5 text-[11px] flex justify-between border border-[var(--line-soft)]">
+                <span className="text-[var(--muted)] font-medium">Estimasi Margin Laba:</span>
+                <span className="font-black text-emerald-600 dark:text-emerald-400 tabular">
+                  Rp {marginPreview.amount.toLocaleString("id-ID")} ({marginPreview.percent}%)
+                </span>
+              </div>
 
               <div className="flex items-center gap-2 pt-1">
-                <input type="checkbox" id="track" checked={trackStock} onChange={(e) => setTrackStock(e.target.checked)} className="h-4 w-4 accent-[var(--brand)]" />
-                <label htmlFor="track" className="font-bold text-[var(--ink)]">Pantau Jumlah Stok (Warung/Sembako)</label>
+                <input
+                  type="checkbox"
+                  id="track"
+                  checked={trackStock}
+                  onChange={(e) => setTrackStock(e.target.checked)}
+                  className="h-4 w-4 rounded accent-[var(--brand)] cursor-pointer"
+                />
+                <label htmlFor="track" className="font-bold text-[var(--ink)] cursor-pointer">
+                  Pantau Jumlah Stok Fisik (Aktifkan untuk Sembako/Kelontong)
+                </label>
               </div>
 
               {trackStock && (
                 <div>
-                  <label className="font-bold text-[var(--muted)]">Jumlah Stok Sekarang</label>
-                  <input type="number" value={stock} onChange={(e) => setStock(e.target.value)} placeholder="10" className="mt-1 w-full rounded-xl border border-[var(--line)] p-2.5 tabular outline-none focus:border-[var(--brand)]" />
+                  <label className="font-bold text-[var(--muted)] block mb-1">Jumlah Stok Sekarang:</label>
+                  <input
+                    type="number"
+                    value={stock}
+                    onChange={(e) => setStock(e.target.value)}
+                    placeholder="10"
+                    className="w-full rounded-xl border border-[var(--line)] bg-[var(--surface-2)] p-2.5 tabular font-bold outline-none focus:border-[var(--brand)] focus:bg-[var(--surface)]"
+                  />
                 </div>
               )}
 
               <div>
-                <label className="font-bold text-[var(--muted)]">Barcode (opsional)</label>
-                <input value={barcode} onChange={(e) => setBarcode(e.target.value)} placeholder="Scan atau ketik kode barcode" className="mt-1 w-full rounded-xl border border-[var(--line)] p-2.5 outline-none focus:border-[var(--brand)]" />
+                <label className="font-bold text-[var(--muted)] block mb-1">Kode Barcode (opsional):</label>
+                <input
+                  value={barcode}
+                  onChange={(e) => setBarcode(e.target.value)}
+                  placeholder="Scan atau ketik kode barcode kemasan"
+                  className="w-full rounded-xl border border-[var(--line)] bg-[var(--surface-2)] p-2.5 outline-none focus:border-[var(--brand)] focus:bg-[var(--surface)]"
+                />
               </div>
 
               <div>
-                <label className="font-bold text-[var(--muted)]">Varian / Rasa (pisahkan dengan koma)</label>
-                <input value={variantsStr} onChange={(e) => setVariantsStr(e.target.value)} placeholder="Contoh: Manis, Tawar, Hangat" className="mt-1 w-full rounded-xl border border-[var(--line)] p-2.5 outline-none focus:border-[var(--brand)]" />
+                <label className="font-bold text-[var(--muted)] block mb-1">Varian Rasa / Pilihan (pisahkan dengan koma):</label>
+                <input
+                  value={variantsStr}
+                  onChange={(e) => setVariantsStr(e.target.value)}
+                  placeholder="Contoh: Manis, Tawar, Hangat, Dingin"
+                  className="w-full rounded-xl border border-[var(--line)] bg-[var(--surface-2)] p-2.5 outline-none focus:border-[var(--brand)] focus:bg-[var(--surface)]"
+                />
               </div>
             </div>
 
-            <div className="mt-4 flex gap-2">
-              <button onClick={() => setModalOpen(false)} className="flex-1 rounded-xl border border-[var(--line)] py-2.5 text-xs font-semibold">
+            <div className="flex gap-2 pt-3 border-t border-[var(--line-soft)]">
+              <button
+                type="button"
+                onClick={() => setModalOpen(false)}
+                className="flex-1 rounded-xl border border-[var(--line)] py-2.5 text-xs font-bold hover:bg-[var(--surface-2)] transition-all cursor-pointer"
+              >
                 Batal
               </button>
-              <button disabled={!name.trim() || !price} onClick={handleSave} className="flex-1 rounded-xl bg-[var(--brand)] py-2.5 text-xs font-bold text-white disabled:opacity-40">
+              <button
+                disabled={!name.trim() || !price}
+                type="button"
+                onClick={handleSave}
+                className="flex-1 rounded-xl bg-[var(--brand)] hover:bg-[var(--brand-hover)] py-2.5 text-xs font-extrabold text-white disabled:opacity-40 shadow-xs transition-all cursor-pointer"
+              >
                 Simpan Produk
               </button>
             </div>

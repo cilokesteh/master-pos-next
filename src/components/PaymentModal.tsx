@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CheckCircle2, FileText, Printer, Send, X } from "lucide-react";
+import { useLiveQuery } from "dexie-react-hooks";
+import { CheckCircle2, FileText, Printer, Send, X, Banknote, QrCode, ArrowRightLeft, BookUser } from "lucide-react";
 import { db, type CartItem } from "@/lib/db";
 import { DEFAULT_STORE } from "@/lib/seed";
 import { useCart } from "@/lib/cart-store";
@@ -110,68 +111,164 @@ export default function PaymentModal({ totals, items, onClose }: { totals: any; 
     setCompletedTx(tx);
   };
 
+  const getMethodIcon = (m: string) => {
+    switch (m) {
+      case "cash": return Banknote;
+      case "qris": return QrCode;
+      case "transfer": return ArrowRightLeft;
+      case "kasbon": return BookUser;
+      default: return Banknote;
+    }
+  };
+
   if (completedTx) {
     return (
-      <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/60 p-4">
-        <div className="w-full max-w-sm rounded-xl bg-[var(--surface)] p-6 text-center">
-          <CheckCircle2 className="mx-auto h-12 w-12 text-[var(--brand)]" />
-          <h3 className="mt-2 text-xl font-bold">Transaksi Sukses!</h3>
-          <p className="text-sm text-[var(--muted)]">No. Struk: {completedTx.receiptNumber}</p>
-          <div className="my-4 rounded-xl bg-[var(--surface-2)] p-3 text-sm">
-            <div className="flex justify-between"><span>Total</span><span className="font-bold">Rp {completedTx.total.toLocaleString("id-ID")}</span></div>
-            {completedTx.paymentMethod === "cash" && <div className="mt-1 flex justify-between text-xs text-[var(--muted)]"><span>Kembalian</span><span className="font-bold text-[var(--brand)]">Rp {completedTx.cashChange.toLocaleString("id-ID")}</span></div>}
+      <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+        <div className="w-full max-w-sm rounded-2xl bg-[var(--surface)] border border-[var(--line)] p-6 text-center shadow-2xl animate-in zoom-in-95 duration-150">
+          <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+            <CheckCircle2 size={32} />
           </div>
+          <h3 className="mt-3 text-lg font-black text-[var(--ink)]">Transaksi Sukses!</h3>
+          <p className="text-xs text-[var(--muted)] font-medium mt-0.5">No. Struk: {completedTx.receiptNumber}</p>
+          
+          <div className="my-4 rounded-xl border border-[var(--line)] bg-[var(--surface-2)]/80 p-3.5 text-xs text-left space-y-1.5">
+            <div className="flex justify-between text-[var(--muted)] font-medium">
+              <span>Metode:</span>
+              <span className="font-bold text-[var(--ink)] uppercase">{completedTx.paymentMethod}</span>
+            </div>
+            <div className="flex justify-between text-[var(--muted)] font-medium">
+              <span>Total Tagihan:</span>
+              <span className="font-black text-[var(--ink)] tabular">Rp {completedTx.total.toLocaleString("id-ID")}</span>
+            </div>
+            {completedTx.paymentMethod === "cash" && (
+              <>
+                <div className="flex justify-between text-[var(--muted)] font-medium">
+                  <span>Diterima:</span>
+                  <span className="font-bold text-[var(--ink)] tabular">Rp {completedTx.cashTendered.toLocaleString("id-ID")}</span>
+                </div>
+                <div className="flex justify-between border-t border-[var(--line-soft)] pt-1.5 font-bold text-[var(--brand-dark)]">
+                  <span>Kembalian Kasir:</span>
+                  <span className="text-sm font-black tabular">Rp {completedTx.cashChange.toLocaleString("id-ID")}</span>
+                </div>
+              </>
+            )}
+          </div>
+
           <div className="grid grid-cols-3 gap-2">
-            <button onClick={() => printDirectThermal(completedTx, DEFAULT_STORE, 58)} className="flex flex-col items-center gap-1 rounded-xl border border-[var(--line)] p-2.5 text-xs font-semibold hover:bg-[var(--surface-2)]"><Printer size={16}/> Cetak</button>
-            <button onClick={() => { const doc = generateThermalPdf(completedTx, DEFAULT_STORE, 58); doc.save(`${completedTx.receiptNumber}.pdf`); }} className="flex flex-col items-center gap-1 rounded-xl border border-[var(--line)] p-2.5 text-xs font-semibold hover:bg-[var(--surface-2)]"><FileText size={16}/> PDF</button>
-            <button onClick={() => shareViaWhatsApp(completedTx, DEFAULT_STORE, completedTx.customerPhone)} className="flex flex-col items-center gap-1 rounded-xl border border-[var(--line)] p-2.5 text-xs font-semibold text-[var(--brand-dark)] hover:bg-emerald-50"><Send size={16}/> WA</button>
+            <button onClick={() => printDirectThermal(completedTx, DEFAULT_STORE, 58)} className="flex flex-col items-center justify-center gap-1 rounded-xl border border-[var(--line)] bg-[var(--surface)] p-2.5 text-xs font-bold text-[var(--ink)] hover:bg-[var(--surface-2)] transition-all">
+              <Printer size={16}/> Cetak
+            </button>
+            <button onClick={() => { const doc = generateThermalPdf(completedTx, DEFAULT_STORE, 58); doc.save(`${completedTx.receiptNumber}.pdf`); }} className="flex flex-col items-center justify-center gap-1 rounded-xl border border-[var(--line)] bg-[var(--surface)] p-2.5 text-xs font-bold text-[var(--ink)] hover:bg-[var(--surface-2)] transition-all">
+              <FileText size={16}/> PDF
+            </button>
+            <button onClick={() => shareViaWhatsApp(completedTx, DEFAULT_STORE, completedTx.customerPhone)} className="flex flex-col items-center justify-center gap-1 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-2.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20 transition-all">
+              <Send size={16}/> WA
+            </button>
           </div>
-          <button onClick={onClose} className="mt-5 w-full rounded-xl bg-[var(--brand)] py-3 font-bold text-white">Selesai / Transaksi Baru</button>
+
+          <button onClick={onClose} className="mt-4 w-full rounded-xl bg-[var(--brand)] py-3 font-extrabold text-xs text-white shadow-sm hover:bg-[var(--brand-hover)] active:scale-98 transition-all cursor-pointer">
+            Selesai / Transaksi Baru
+          </button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="fixed inset-0 z-[70] flex items-end justify-center bg-black/60 p-0 sm:items-center sm:p-4">
-      <div className="w-full max-w-lg rounded-t-3xl bg-[var(--surface)] p-5 sm:rounded-xl">
+    <div className="fixed inset-0 z-[70] flex items-end justify-center bg-black/60 backdrop-blur-xs p-0 sm:items-center sm:p-4 animate-in fade-in duration-100">
+      <div className="w-full max-w-md rounded-t-3xl bg-[var(--surface)] border border-[var(--line)] p-5 sm:rounded-2xl shadow-2xl animate-in slide-in-from-bottom sm:zoom-in-95 duration-150">
         <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
-          <div><h3 className="font-bold">Pembayaran</h3><p className="text-xs text-[var(--muted)]">Total Tagihan: Rp {totals.total.toLocaleString("id-ID")}</p></div>
-          <button onClick={onClose} className="rounded-full p-1 hover:bg-[var(--surface-2)]"><X size={18}/></button>
+          <div>
+            <h3 className="font-extrabold text-base text-[var(--ink)]">Pembayaran</h3>
+            <p className="text-xs text-[var(--muted)] font-medium mt-0.5">
+              Total Tagihan: <span className="font-bold text-[var(--brand-dark)] tabular">Rp {totals.total.toLocaleString("id-ID")}</span>
+            </p>
+          </div>
+          <button onClick={onClose} className="rounded-full p-1.5 hover:bg-[var(--surface-2)] text-[var(--muted)]">
+            <X size={18}/>
+          </button>
         </div>
 
         <div className="mt-4 grid grid-cols-4 gap-2">
-          {(["cash", "qris", "transfer", "kasbon"] as const).map((m) => (
-            <button key={m} onClick={() => setMethod(m)} className={`rounded-xl border py-2.5 text-xs font-bold capitalize transition ${method === m ? "border-[var(--brand)] bg-[var(--brand-soft)] text-[var(--brand-dark)]" : "border-[var(--line)] text-[var(--muted)]"}`}>
-              {m === "cash" ? "Tunai" : m.toUpperCase()}
-            </button>
-          ))}
+          {(["cash", "qris", "transfer", "kasbon"] as const).map((m) => {
+            const Icon = getMethodIcon(m);
+            const active = method === m;
+            return (
+              <button
+                key={m}
+                onClick={() => setMethod(m)}
+                className={`flex flex-col items-center justify-center gap-1.5 rounded-xl border py-2.5 text-xs font-bold capitalize transition-all cursor-pointer ${
+                  active
+                    ? "border-[var(--brand)] bg-[var(--brand-soft)] text-[var(--brand-dark)] shadow-2xs font-extrabold"
+                    : "border-[var(--line)] text-[var(--muted)] hover:bg-[var(--surface-2)] hover:text-[var(--ink)]"
+                }`}
+              >
+                <Icon size={16} />
+                <span>{m === "cash" ? "Tunai" : m.toUpperCase()}</span>
+              </button>
+            );
+          })}
         </div>
 
         {method === "cash" && (
           <div className="mt-4 space-y-3">
-            <input type="number" value={cashInput} onChange={(e) => setCashInput(e.target.value)} className="w-full rounded-lg border border-[var(--line)] bg-[var(--surface-2)] py-3 text-center text-2xl font-bold tabular outline-none focus:border-[var(--brand)]" />
+            <div>
+              <label className="text-[11px] font-bold text-[var(--muted)] block mb-1">Nominal Uang Diterima:</label>
+              <input
+                type="number"
+                value={cashInput}
+                onChange={(e) => setCashInput(e.target.value)}
+                className="w-full rounded-xl border border-[var(--line)] bg-[var(--surface-2)] py-2.5 text-center text-xl font-black tabular outline-none focus:border-[var(--brand)] focus:bg-[var(--surface)] transition-all"
+              />
+            </div>
+            
             <div className="flex flex-wrap gap-1.5">
               {quickCashPresets.map((p) => (
-                <button key={p} onClick={() => setCashInput(String(p))} className="rounded-lg border border-[var(--line)] bg-[var(--surface)] px-2.5 py-1.5 text-xs font-semibold tabular hover:border-[var(--brand)]">
+                <button
+                  key={p}
+                  onClick={() => setCashInput(String(p))}
+                  className="rounded-lg border border-[var(--line)] bg-[var(--surface)] px-2.5 py-1 text-xs font-bold tabular text-[var(--ink)] hover:border-[var(--brand)] hover:bg-[var(--brand-soft)] transition-all cursor-pointer"
+                >
                   {p === totals.total ? "Uang Pas" : `Rp ${p.toLocaleString("id-ID")}`}
                 </button>
               ))}
             </div>
-            <div className="flex justify-between rounded-xl bg-[var(--surface-2)] px-4 py-2.5 text-sm font-bold">
-              <span>Kembalian</span><span className="text-[var(--brand)] tabular">Rp {change.toLocaleString("id-ID")}</span>
+
+            <div className="flex justify-between items-center rounded-xl bg-[var(--surface-2)] px-4 py-2.5 text-sm font-bold">
+              <span className="text-xs text-[var(--muted)]">Uang Kembalian:</span>
+              <span className="text-base font-black text-[var(--brand-dark)] tabular">Rp {change.toLocaleString("id-ID")}</span>
             </div>
           </div>
         )}
 
         {method === "kasbon" && (
-          <div className="mt-4 space-y-2">
-            <input value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder="Nama Pelanggan (Wajib)" className="w-full rounded-xl border border-[var(--line)] p-2.5 text-sm outline-none focus:border-[var(--brand)]" />
-            <input value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} placeholder="No. WA Pelanggan (opsional)" className="w-full rounded-xl border border-[var(--line)] p-2.5 text-sm outline-none focus:border-[var(--brand)]" />
+          <div className="mt-4 space-y-2.5">
+            <div>
+              <label className="text-[11px] font-bold text-[var(--muted)] block mb-1">Nama Pelanggan (Wajib Catat Kasbon):</label>
+              <input
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value)}
+                placeholder="Contoh: Pak Budi / Bu Siti"
+                className="w-full rounded-xl border border-[var(--line)] bg-[var(--surface-2)] p-2.5 text-xs font-medium outline-none focus:border-[var(--brand)] focus:bg-[var(--surface)] transition-all"
+              />
+            </div>
+            <div>
+              <label className="text-[11px] font-bold text-[var(--muted)] block mb-1">Nomor WhatsApp Pelanggan (opsional):</label>
+              <input
+                value={customerPhone}
+                onChange={(e) => setCustomerPhone(e.target.value)}
+                placeholder="081234567890"
+                className="w-full rounded-xl border border-[var(--line)] bg-[var(--surface-2)] p-2.5 text-xs font-medium outline-none focus:border-[var(--brand)] focus:bg-[var(--surface)] transition-all"
+              />
+            </div>
           </div>
         )}
 
-        <button disabled={method === "cash" && cashTendered < totals.total || (method === "kasbon" && !customerName.trim())} onClick={handleCheckout} className="mt-5 w-full rounded-lg bg-[var(--brand)] py-3.5 font-bold text-white disabled:opacity-40">
+        <button
+          disabled={(method === "cash" && cashTendered < totals.total) || (method === "kasbon" && !customerName.trim())}
+          onClick={handleCheckout}
+          className="mt-5 w-full rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 py-3.5 font-extrabold text-xs sm:text-sm text-white shadow-md active:scale-98 transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+        >
           Konfirmasi Pembayaran
         </button>
       </div>
